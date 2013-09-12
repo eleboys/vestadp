@@ -76,7 +76,7 @@
         function renderDayView(opts) {
             $(container).empty().addClass("ui-vestadp-container");
             $(container).append(renderHeader(calendar.getMonthList()[calendar.month - 1] + " " + getNumber(calendar.year, opts.persianNumbers), 'view:month',opts));
-            var calTable = $("<table cellspacing='0'></table>").addClass("ui-vestadp-calendar").css("direction", opts.direction);
+            var calTable = $("<table cellspacing='0'></table>").addClass("ui-vestadp-calendar").css("direction", opts.direction).hide();
             var weekHeader = $("<tr class='ui-vestadp-weekheader'></tr>");
             var weekdays = calendar.getWeekdayList(true);
             for (var i = 0; i < weekdays.length; i++) {
@@ -105,7 +105,7 @@
             $(container).append(calTable);
             if (opts.showFooter && !opts.showInline)
                 $(container).append(renderFooter(element, opts));
-            
+            calTable.fadeIn();
             $('[data-event="click"]', container).click(function () {
                 var handler = $(this).attr("data-handler");
                 var args = parseArgs($(this).attr("data-args"));
@@ -128,7 +128,9 @@
                         }
                         return;
                 }
-                renderDayView(opts);
+                calTable.fadeOut("fast",function(){
+                    renderDayView(opts);
+                });
             });
         }
      
@@ -142,14 +144,14 @@
 
         function renderFooter(elm,opts) {
             var footer = $('<div></div>').addClass('ui-vestadp-footer');
-            footer.append($("<div></div>").addClass("ui-vestadp-today").text(opts.regional[opts.language].today).css("width", "50%").click(function () {
+            footer.append($("<div></div>").addClass("ui-vestadp-today").text(opts.regional[opts.language].today).click(function () {
                 var today = new Date();
                 var todayJd = gregorianToJd(today.getFullYear(), today.getMonth() + 1, today.getDate());
                 calendar.setJulianDay(todayJd);
                 elm.val(calendar.toString(dateFormat));
                 container.slideUp("fast");
             }));
-            footer.append($("<div></div>").addClass("ui-vestadp-clear").text(opts.regional[opts.language].clear).css("width", "50%").click(function () {
+            footer.append($("<div></div>").addClass("ui-vestadp-clear").text(opts.regional[opts.language].clear).click(function () {
                 elm.val("");
                 container.slideUp("fast");
             }));
@@ -157,10 +159,9 @@
         }
 
         function renderMonth(opts) {
-
             $(container).empty().addClass("ui-vestadp-container");
             $(container).append(renderHeader(getNumber(calendar.year, opts.persianNumbers), 'view:year',opts));
-            var calTable = $("<table cellspacing='0'></table>").addClass("ui-vestadp-calendar").css("direction", opts.direction);
+            var calTable = $("<table cellspacing='0'></table>").addClass("ui-vestadp-calendar").css("direction", opts.direction).hide();
             var mIndex = 0;
             var months = calendar.getMonthList(true);
             for (var i = 0; i < 3; i++) {
@@ -177,6 +178,7 @@
             $(container).append(calTable);
             if (opts.showFooter && !opts.showInline)
                 $(container).append(renderFooter(element, opts));
+            calTable.fadeIn();
             $('[data-event="click"]', container).click(function () {
                 var handler = $(this).attr("data-handler");
                 var args = parseArgs($(this).attr("data-args"));
@@ -196,15 +198,16 @@
                             renderYear(opts, calendar.year);
                         return;
                 }
-                renderMonth(opts);
+                calTable.fadeOut("fast",function(){
+                   renderMonth(opts);
+                });
             });
         }
 
         function renderYear(opts, year) {
-
             $(container).empty().addClass("ui-vestadp-container");
 
-            var calTable = $("<table cellspacing='0'></table>").addClass("ui-vestadp-calendar").css("direction", "ltr");
+            var calTable = $("<table cellspacing='0'></table>").addClass("ui-vestadp-calendar").css("direction", "ltr").hide();
 
             var startYear = year - 4;
             var endYear = year + 7;
@@ -225,20 +228,27 @@
             $(container).append(calTable);
             if (opts.showFooter && !opts.showInline)
                 $(container).append(renderFooter(element, opts));
+            calTable.fadeIn();
             $('[data-event="click"]', container).click(function () {
                 var handler = $(this).attr("data-handler");
                 var args = parseArgs($(this).attr("data-args"));
                 switch (handler) {
                     case "next":
-                        renderYear(opts, endYear + 4);
+                        calTable.fadeOut("fast",function(){
+                            renderYear(opts, endYear + 4);
+                        });
                         return;
                     case "prev":
-                        renderYear(opts, startYear - 7);
+                        calTable.fadeOut("fast",function(){
+                            renderYear(opts, startYear - 7);
+                        });
                         return;
                     case "view":
                         if (args["view"] == "month") {
                             calendar.setYear(parseInt(args["year"]));
-                            renderMonth(opts);
+                            calTable.fadeOut("fast",function(){
+                                renderMonth(opts);
+                            });
                             return;
                         }
                 }
@@ -438,13 +448,13 @@
                 today : "امروز",
                 clear: "پاکن",
                 previous: "قبلی",
-                next: "بعدی",
+                next: "بعدی"
             },
             "en": {
                 today: "Today",
                 clear: "Clear",
                 previous: "Previous",
-                next: "Next",
+                next: "Next"
             }
         },
         language: 'fa',
