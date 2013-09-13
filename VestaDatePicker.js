@@ -45,11 +45,12 @@
 /* Vesta Date Picker */
 (function () {
     var vestaDatePicker;
-    vestaDatePicker = function (container,element,trigger, options) {
+    vestaDatePicker = function (container,element, options) {
         if (typeof (container) == "undefined")
             return;
-
+        console.log(options);
         var settings = $.extend(vestaDatePicker.defaultSettings, options);
+        console.log(settings);
         var calendar = settings.calendar;
         var dateFormat = settings.dateFormat ? settings.dateFormat : calendar.defaultDateFormat;
         var selectedJulianDay = 0;
@@ -123,10 +124,13 @@
                         calendar.setMonth(parseInt(args["month"]));
                         calendar.setDay(parseInt(args["day"]));
                         var dateStr = calendar.toString(dateFormat);
-                        opts.dateChanged(element,dateStr,calendar)
+                        opts.dateChanged(element,dateStr,calendar);
                         if (typeof(element) !== "undefined" && !opts.showInline) {
                             element.val(dateStr);
                             container.slideUp("fast");
+                        }else if (typeof(element) !== "undefined" && opts.showInline){
+                            $(".ui-vestadp-selected",calTable).removeClass("ui-vestadp-selected");
+                            $(this).addClass("ui-vestadp-selected");
                         }
                         return;
                 }
@@ -476,49 +480,73 @@
 
 
 (function ($) {
-    $.fn.vestadp = function(options) {
-        var opts = $.extend({}, VestaDatePicker.defaultSettings, options);
-        return this.each(function(index, element) {
-            if ($(element).is(":text"))
-                _renderTextbox(element,opts);
-            else
-                _renderInline(element,opts);
-        });
+    $.fn.vestadp = function(method) {
 
-        function _renderTextbox(element,opts) {
-            // if user wants to run it over a textbox showInline must be disabled
-            opts.showInline = false;
-            var divContainer = $("<div />").attr("data-rel", "vestadatepicker");
-            divContainer.appendTo("body");
-            var vdp = new VestaDatePicker(divContainer, $(element), undefined, opts);
-
-            divContainer.hide();
-            vdp.display($(element).val());
-
-            $(element).focus(function() {
-                vdp.display($(this).val());
-                $("div[data-rel='vestadatepicker']").slideUp("fast");
-                divContainer.slideDown("fast").position({
-                    of: $(this),
-                    my: "right top",
-                    at: "right bottom"
+        var methods = {
+            init :function(options){
+                var opts = $.extend({}, VestaDatePicker.defaultSettings, options);
+                return this.each(function(index, element) {
+                    if ($(element).is(":text"))
+                        methods._renderTextbox(element,opts);
+                    else
+                        methods._renderInline(element,opts);
                 });
-            }).click(function(ev) {
-                ev.stopPropagation();
-            });
+            },
+            date :function(){ },
+            _renderInline : function(element,opts){
+                if ($(element).data("vestadp"))
+                    return;
+                // if user wants to run it over a DOM other than textbox showInline must be enabled
+                opts.showInline = true;
+                var divContainer = $("<div />").attr("data-rel", "vestadatepicker-inline");
+                divContainer.appendTo("body");
+                var vdp = new VestaDatePicker(divContainer, $(element), opts);
+                $(element).data("vestadp",true);
+                vdp.display();
+                $(element).append(divContainer);
+            },
+            _renderTextbox : function(element,opts){
+                if ($(element).data("vestadp"))
+                    return;
+                // if user wants to run it over a textbox showInline must be disabled
+                opts.showInline = false;
+                var divContainer = $("<div />").attr("data-rel", "vestadatepicker").css("position","absolute");
+                divContainer.appendTo("body");
+                var vdp = new VestaDatePicker(divContainer, $(element), opts);
+                $(element).data("vestadp",true);
+                divContainer.hide();
+                vdp.display($(element).val());
 
-            divContainer.click(function(ev) {
-                ev.stopPropagation();
-            });
+                $(element).focus(function() {
+                    vdp.display($(this).val());
+                    $("div[data-rel='vestadatepicker']").slideUp("fast");
+                    divContainer.slideDown("fast").position({
+                        of: $(this),
+                        my: "right top",
+                        at: "right bottom"
+                    });
+                }).click(function(ev) {
+                    ev.stopPropagation();
+                });
 
-            $(document).click(function() {
-                divContainer.slideUp("fast");
-            });
+                divContainer.click(function(ev) {
+                    ev.stopPropagation();
+                });
+
+                $(document).click(function() {
+                    divContainer.slideUp("fast");
+                });
+            }
         }
-    };
 
-    function _renderInline(element,opts) {
-        
-    }
+        // Method calling logic
+        if (methods[method] && method.charAt(0)!='_') {
+          return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
+        } else if ( typeof method === 'object' || ! method ) {
+          return methods.init.apply( this, arguments );
+        } else {
+          $.error( 'Method ' +  method + ' does not exist on jQuery.vestadp' );
+        }
+      };
 
 })(jQuery);

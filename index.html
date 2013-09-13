@@ -15,7 +15,6 @@
                 width: 17em;
                 border: solid 1px gray;
                 font-family: tahoma;
-                position: absolute;
                 background-color: white;
             }
             .ui-vestadp-container tbody,.ui-vestadp-container td{
@@ -105,10 +104,7 @@
         </style>
         <script>
             $(function () {
-                $(".datepicker").vestadp({ dateChanged: function(elm,date){
-                  console.log(elm);                  
-                  console.log(date);  
-                } });
+                //$(".datepicker").vestadp();
             });
         </script>
     </head>
@@ -119,7 +115,7 @@
             <!--<input  type="text" value="2013-09-10" class="datepicker" data-dir="rtl" />-->
             <input  type="text" value="1390/12/12" class="datepicker" data-dir="rtl" />
         </p>
-        <p>&nbsp;</p>
+        <p id="medate">&nbsp;</p>
         <p>&nbsp;</p>
         <p>&nbsp;</p>
         <p style="text-align: center">
