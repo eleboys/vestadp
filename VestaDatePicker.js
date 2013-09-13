@@ -122,8 +122,10 @@
                     case "date":
                         calendar.setMonth(parseInt(args["month"]));
                         calendar.setDay(parseInt(args["day"]));
+                        var dateStr = calendar.toString(dateFormat);
+                        opts.dateChanged(element,dateStr,calendar)
                         if (typeof(element) !== "undefined" && !opts.showInline) {
-                            element.val(calendar.toString(dateFormat));
+                            element.val(dateStr);
                             container.slideUp("fast");
                         }
                         return;
@@ -459,8 +461,8 @@
         },
         language: 'fa',
         calendar: new window.persianCalendar(),
-        onDateChanged: function () { },
-        showInline : true
+        dateChanged: function () { },
+        showInline : false
     };
 
     //vestaDatePicker.defaultSettings = {
@@ -474,18 +476,21 @@
 
 
 (function ($) {
-    $.fn.datePicker = function() {
+    $.fn.vestadp = function(options) {
+        var opts = $.extend({}, VestaDatePicker.defaultSettings, options);
         return this.each(function(index, element) {
             if ($(element).is(":text"))
-                _renderTextbox(element);
+                _renderTextbox(element,opts);
             else
-                _renderInline(element);
+                _renderInline(element,opts);
         });
 
-        function _renderTextbox(element) {
+        function _renderTextbox(element,opts) {
+            // if user wants to run it over a textbox showInline must be disabled
+            opts.showInline = false;
             var divContainer = $("<div />").attr("data-rel", "vestadatepicker");
             divContainer.appendTo("body");
-            var vdp = new VestaDatePicker(divContainer, $(element), undefined, { showInline: false });
+            var vdp = new VestaDatePicker(divContainer, $(element), undefined, opts);
 
             divContainer.hide();
             vdp.display($(element).val());
@@ -501,9 +506,6 @@
             }).click(function(ev) {
                 ev.stopPropagation();
             });
-            /*.blur(function() {
-                divContainer.slideUp("fast");
-            });*/
 
             divContainer.click(function(ev) {
                 ev.stopPropagation();
@@ -515,6 +517,8 @@
         }
     };
 
-    function _renderInline(element) { }
+    function _renderInline(element,opts) {
+        
+    }
 
 })(jQuery);

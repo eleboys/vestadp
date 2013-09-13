@@ -104,51 +104,11 @@
             }
         </style>
         <script>
-            /*
-            var vdp;
-            $(function() {
-                vdp = new VestaDatePicker($("#vestadp"), {
-                    onDateChanged: function (date) {
-                        $("#txtDate").val(date);
-                        $("#vestadp").slideUp("fast");
-                    }
-                });
-                
-                $("#vestadp").hide();
-                vdp.display($("#txtDate").val());
-
-                $("#txtDate").focus(function () {
-                    vdp.display($(this).val());
-                    $("#vestadp").slideDown("fast").position({
-                            of: $("#txtDate"),
-                            my: "right top",
-                            at: "right bottom"
-                    });
-                });
-
-                $("#vestadp").click(function (ev) {
-                    ev.stopPropagation();
-                });
-
-                $("#txtDate").click(function (ev) {
-                    ev.stopPropagation();
-                });
-
-                $(document).click(function () {
-                    $("#vestadp").slideUp("fast");
-                });
-
-
-            });
-            */
-
-
             $(function () {
-                //$("#txtDate").vestaDatePicker();
-                //$(".datepicker").vestaDatePicker();
-                              
-                $(".datepicker").datePicker({ value: 1 });
-
+                $(".datepicker").vestadp({ dateChanged: function(elm,date){
+                  console.log(elm);                  
+                  console.log(date);  
+                } });
             });
         </script>
     </head>
