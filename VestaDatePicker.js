@@ -52,6 +52,9 @@
         var calendar = settings.calendar;
         var dateFormat = settings.dateFormat ? settings.dateFormat : calendar.defaultDateFormat;
         var selectedJulianDay = 0;
+        var currentView = 0; // 0 = dayView; 1 = month view; 2 = year view
+        var startYear, endYear;
+        _mouseWheelBinder(container);
         
         this.display = function (strDate) {
             if (typeof(strDate) === "undefined" || strDate=="") {
@@ -71,10 +74,61 @@
             renderDayView(settings);
             return;
         };
+        
+        function displaywheel(e) {
+            //equalize event object
+            console
+            var evt = window.event || e;
+            //check for detail first so Opera uses that instead of wheelDelta
+            var delta = evt.detail ? evt.detail * (-120) : evt.wheelDelta;
+            if (delta > 0) {
+                switch (currentView) {
+                    case 0:
+                        calendar.addMonth(1);
+                        renderDayView(settings);
+                        break;
+                    case 1:
+                        calendar.addYear(1);
+                        renderMonth(settings);
+                        break;
+                    case 2:
+                        renderYear(settings, endYear + 4);
+                        break;
+                }
+            } else {
+                switch (currentView) {
+                    case 0:
+                        calendar.addMonth(-1);
+                        renderDayView(settings);
+                        break;
+                    case 1:
+                        calendar.addYear(-1);
+                        renderMonth(settings);
+                        break;
+                    case 2:
+                        renderYear(settings, startYear - 7);
+                        break;
+                }
+            }
+            //disable default wheel action of scrolling page
+            if (evt.preventDefault) 
+                evt.preventDefault();
+            else
+                return false; 
+        }
+
+        function _mouseWheelBinder(elm) {
+            //FF doesn't recognize mousewheel as of FF3.x
+            var mousewheelevt = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
+            elm = $(elm).get(0);
+            if (elm.attachEvent) //if IE (and Opera depending on user setting)
+                elm.attachEvent("on" + mousewheelevt, displaywheel);
+            else if (elm.addEventListener) //WC3 browsers
+                elm.addEventListener(mousewheelevt, displaywheel, false);
+        }
      
         function renderDayView(opts) {
-            console.log(settings.showInline);
-            console.log(opts.showInline);
+            currentView = 0;
             $(container).empty().addClass("ui-vestadp-container");
             $(container).append(renderHeader(calendar.getMonthList()[calendar.month - 1] + " " + getNumber(calendar.year, opts.persianNumbers), 'view:month',opts));
             var calTable = $("<table cellspacing='0'></table>").addClass("ui-vestadp-calendar").css("direction", opts.direction).hide();
@@ -165,6 +219,7 @@
         }
 
         function renderMonth(opts) {
+            currentView = 1;
             $(container).empty().addClass("ui-vestadp-container");
             $(container).append(renderHeader(getNumber(calendar.year, opts.persianNumbers), 'view:year',opts));
             var calTable = $("<table cellspacing='0'></table>").addClass("ui-vestadp-calendar").css("direction", opts.direction).hide();
@@ -211,12 +266,13 @@
         }
 
         function renderYear(opts, year) {
+            currentView = 2;
             $(container).empty().addClass("ui-vestadp-container");
 
             var calTable = $("<table cellspacing='0'></table>").addClass("ui-vestadp-calendar").css("direction", "ltr").hide();
 
-            var startYear = year - 4;
-            var endYear = year + 7;
+            startYear = year - 4;
+            endYear = year + 7;
             year = startYear;
             $(container).append(renderHeader(getNumber(startYear, opts.persianNumbers) + " - " + getNumber(endYear, opts.persianNumbers), '',opts));
 
