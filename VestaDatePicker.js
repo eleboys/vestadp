@@ -48,9 +48,7 @@
     vestaDatePicker = function (container,element, options) {
         if (typeof (container) == "undefined")
             return;
-        console.log(options);
-        var settings = $.extend(vestaDatePicker.defaultSettings, options);
-        console.log(settings);
+        var settings = options; //$.extend(vestaDatePicker.defaultSettings, options);
         var calendar = settings.calendar;
         var dateFormat = settings.dateFormat ? settings.dateFormat : calendar.defaultDateFormat;
         var selectedJulianDay = 0;
@@ -75,6 +73,8 @@
         };
      
         function renderDayView(opts) {
+            console.log(settings.showInline);
+            console.log(opts.showInline);
             $(container).empty().addClass("ui-vestadp-container");
             $(container).append(renderHeader(calendar.getMonthList()[calendar.month - 1] + " " + getNumber(calendar.year, opts.persianNumbers), 'view:month',opts));
             var calTable = $("<table cellspacing='0'></table>").addClass("ui-vestadp-calendar").css("direction", opts.direction).hide();
@@ -124,7 +124,7 @@
                         calendar.setMonth(parseInt(args["month"]));
                         calendar.setDay(parseInt(args["day"]));
                         var dateStr = calendar.toString(dateFormat);
-                        opts.dateChanged(element,dateStr,calendar);
+                        opts.dateChanged(element, dateStr, calendar);
                         if (typeof(element) !== "undefined" && !opts.showInline) {
                             element.val(dateStr);
                             container.slideUp("fast");
@@ -483,17 +483,18 @@
     $.fn.vestadp = function(method) {
 
         var methods = {
-            init :function(options){
+            init: function(options) {
                 var opts = $.extend({}, VestaDatePicker.defaultSettings, options);
                 return this.each(function(index, element) {
                     if ($(element).is(":text"))
-                        methods._renderTextbox(element,opts);
+                        methods._renderTextbox(element, opts);
                     else
-                        methods._renderInline(element,opts);
+                        methods._renderInline(element, opts);
                 });
             },
-            date :function(){ },
-            _renderInline : function(element,opts){
+            date: function() {
+            },
+            _renderInline: function(element, opts) {
                 if ($(element).data("vestadp"))
                     return;
                 // if user wants to run it over a DOM other than textbox showInline must be enabled
@@ -501,19 +502,19 @@
                 var divContainer = $("<div />").attr("data-rel", "vestadatepicker-inline");
                 divContainer.appendTo("body");
                 var vdp = new VestaDatePicker(divContainer, $(element), opts);
-                $(element).data("vestadp",true);
+                $(element).data("vestadp", true);
                 vdp.display();
                 $(element).append(divContainer);
             },
-            _renderTextbox : function(element,opts){
+            _renderTextbox: function(element, opts) {
                 if ($(element).data("vestadp"))
                     return;
                 // if user wants to run it over a textbox showInline must be disabled
                 opts.showInline = false;
-                var divContainer = $("<div />").attr("data-rel", "vestadatepicker").css("position","absolute");
+                var divContainer = $("<div />").attr("data-rel", "vestadatepicker").css("position", "absolute");
                 divContainer.appendTo("body");
                 var vdp = new VestaDatePicker(divContainer, $(element), opts);
-                $(element).data("vestadp",true);
+                $(element).data("vestadp", true);
                 divContainer.hide();
                 vdp.display($(element).val());
 
@@ -537,16 +538,16 @@
                     divContainer.slideUp("fast");
                 });
             }
-        }
+        };
 
         // Method calling logic
-        if (methods[method] && method.charAt(0)!='_') {
-          return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-        } else if ( typeof method === 'object' || ! method ) {
-          return methods.init.apply( this, arguments );
+        if (methods[method] && method.charAt(0) != '_') {
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof method === 'object' || !method) {
+            return methods.init.apply(this, arguments);
         } else {
-          $.error( 'Method ' +  method + ' does not exist on jQuery.vestadp' );
+            $.error('Method ' + method + ' does not exist on jQuery.vestadp');
         }
-      };
+    };
 
 })(jQuery);
