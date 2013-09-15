@@ -47,15 +47,16 @@
     width: 18px;
 }
 
-.ui-vestadp-prev:hover,  .ui-vestadp-next:hover {
+.ui-vestadp-prev:hover,  .ui-vestadp-next:hover,.ui-vestadp-title:hover {
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAGQEAAAAAAao4lEAAAAAmJLR0T//xSrMc0AAAAJcEhZcwAAAEgAAABIAEbJaz4AAABISURBVDjLY3j6n2EUjSKqo1u3GG57MdxxY7gby3BvIsP9PwwPMxgefWB4Us7w9DHDcz+GF/MYXl5ieHWW4XUpw+uJo2gUEYMAvlejJVIWsXwAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTMtMDUtMDNUMDk6MjE6MDMtMDc6MDAeHtLpAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDEzLTA1LTAzVDA5OjIxOjAzLTA3OjAwb0NqVQAAAABJRU5ErkJggg%3D%3D")  repeat-x scroll 50% 50% #DADADA;
     border: 1px solid #999999;
     color: #212121;
 }
-    .ui-vestadp-title:hover, .ui-vestadp-today:hover, .ui-vestadp-clear:hover {
-        background-color: gray;
-        color: white;
-    }
+
+.ui-vestadp-today:hover, .ui-vestadp-clear:hover {
+    background-color: gray;
+    color: white;
+}
 
 .ui-vestadp-container .ui-vestadp-next {
     right: 0;
