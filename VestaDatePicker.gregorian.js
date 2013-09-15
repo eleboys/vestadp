@@ -155,12 +155,23 @@
 
         this.toString = function (format) {
             var date = format;
-            date = date.replace("dd", String.zeroPad(this.day, 2));
-            date = date.replace("mm", String.zeroPad(this.month, 2));
-            date = date.replace("yy", String.zeroPad(this.year, 4));
-            date = date.replace("d", this.day);
-            date = date.replace("m", this.month);
-            date = date.replace("y", this.year);
+            var mapObj = {
+                dd: String.zeroPad(this.day, 2),
+                mm: String.zeroPad(this.month, 2),
+                yy: String.zeroPad(this.year, 4),
+                d: this.day,
+                m: this.month,
+                y: this.year,
+                DD: weekdays[this.getWeekday()],
+                D: weekdaysAbbr[this.getWeekday()],
+                MM: months[this.month - 1],
+                M: monthsAbbr[this.month - 1]
+            };
+
+            var reg = new RegExp(Object.keys(mapObj).join("|"), "gi");
+            date = date.replace(reg, function (matched) {
+                return mapObj[matched];
+            });
 
             return date;
         };

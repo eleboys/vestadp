@@ -9,7 +9,7 @@
         var weekdays = new Array("یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنج شنبه", "جمعه", "شنبه");
         var weekdaysAbbr = new Array("ی", "د", "س", "چ", "پ", "ج", "ش");
         var months = new Array("فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند");
-        var monthsAbbr = new Array("فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند");
+        var monthsAbbr = new Array("فروردین", "اردی", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند");
         var firstDayOfWeek = 6;//window.VestaDatePicker.WeekDayEnum.Saturday;
 
         this.defaultDateFormat = "yy/mm/dd";
@@ -156,16 +156,25 @@
 
         this.toString = function (format) {
             var date = format;
-            date = date.replace("dd", String.zeroPad(this.day, 2));
-            date = date.replace("mm", String.zeroPad(this.month, 2));
-            date = date.replace("yy", String.zeroPad(this.year, 4));
-            date = date.replace("d", this.day);
-            date = date.replace("m", this.month);
-            date = date.replace("y", this.year);
-            date = date.replace("DD", weekdays[this.getWeekday()]);
-            date = date.replace("D", weekdaysAbbr[this.getWeekday()]);
-            date = date.replace("MM", months[this.month-1]);
-            date = date.replace("M", monthsAbbr[this.month-1]);
+            console.log(this.getWeekday());
+         
+            var mapObj = {
+                dd: String.zeroPad(this.day, 2),
+                mm: String.zeroPad(this.month, 2),
+                yy: String.zeroPad(this.year, 4),
+                d: this.day,
+                m: this.month,
+                y: this.year,
+                DD: this.getWeekdayList()[this.getWeekday()],
+                D: this.getWeekdayList(true)[this.getWeekday()],
+                MM: this.getMonthList()[this.month - 1],
+                M: this.getMonthList(false)[this.month - 1]
+            };
+
+            var reg = new RegExp(Object.keys(mapObj).join("|"), "gi");
+            date = date.replace(reg, function (matched) {
+                return mapObj[matched];
+            });
 
             return date;
         };

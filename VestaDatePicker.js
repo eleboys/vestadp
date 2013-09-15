@@ -131,7 +131,7 @@
             currentView = 0;
             $(container).empty().addClass("ui-vestadp-container");
             $(container).append(renderHeader(calendar.getMonthList()[calendar.month - 1] + " " + getNumber(calendar.year, opts.persianNumbers), 'view:month',opts));
-            var calTable = $("<table cellspacing='0'></table>").addClass("ui-vestadp-calendar").css("direction", opts.direction).hide();
+            var calTable = $("<table cellspacing='2'></table>").addClass("ui-vestadp-calendar").css("direction", opts.direction).hide();
             var weekHeader = $("<tr class='ui-vestadp-weekheader'></tr>");
             var weekdays = calendar.getWeekdayList(true);
             for (var i = 0; i < weekdays.length; i++) {
@@ -222,7 +222,7 @@
             currentView = 1;
             $(container).empty().addClass("ui-vestadp-container");
             $(container).append(renderHeader(getNumber(calendar.year, opts.persianNumbers), 'view:year',opts));
-            var calTable = $("<table cellspacing='0'></table>").addClass("ui-vestadp-calendar").css("direction", opts.direction).hide();
+            var calTable = $("<table cellspacing='1'></table>").addClass("ui-vestadp-calendar").css("direction", opts.direction).hide();
             var mIndex = 0;
             var months = calendar.getMonthList(true);
             for (var i = 0; i < 3; i++) {
@@ -269,7 +269,7 @@
             currentView = 2;
             $(container).empty().addClass("ui-vestadp-container");
 
-            var calTable = $("<table cellspacing='0'></table>").addClass("ui-vestadp-calendar").css("direction", "ltr").hide();
+            var calTable = $("<table cellspacing='1'></table>").addClass("ui-vestadp-calendar").css("direction", "ltr").hide();
 
             startYear = year - 4;
             endYear = year + 7;
