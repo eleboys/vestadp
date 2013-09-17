@@ -1,9 +1,10 @@
         .ui-vestadp-container {
             padding: 2px;
             width: 17em;
-            border: solid 1px gray;
+            border: solid 1px #C71585;
             font-family: tahoma;
             background-color: white;
+            color: #89165d;
         }
 
             .ui-vestadp-container tbody, .ui-vestadp-container td {
@@ -13,8 +14,9 @@
 
         .ui-vestadp-header, .ui-vestadp-footer {
             position: relative;
-            background-color: silver;
+            background-color: #89165d;
             width: 100%;
+            color: white;
         }
 
         .ui-vestadp-title {
@@ -36,7 +38,7 @@
         }
 
             .ui-vestadp-container .ui-vestadp-prev:hover, .ui-vestadp-container .ui-vestadp-next:hover, .ui-vestadp-title:hover, .ui-vestadp-today:hover, .ui-vestadp-clear:hover {
-                background-color: gray;
+                background-color: #C71585;
                 color: white;
             }
 
@@ -71,16 +73,16 @@
 
             .ui-vestadp-day:hover, .ui-vestadp-monthlist > td:hover, .ui-vestadp-yearlist > td:hover {
                 color: white;
-                background-color: gray;
+                background-color: #C71585;
             }
 
             .ui-vestadp-day.ui-vestadp-selected, .ui-vestadp-monthlist > td.ui-vestadp-selected, .ui-vestadp-yearlist > td.ui-vestadp-selected {
                 color: white;
-                background-color: black;
+                background-color: #89165D;
             }
 
             .ui-vestadp-day.ui-vestadp-inactive {
-                color: silver;
+                color: #DB7093;
             }
 
         .ui-vestadp-monthlist > td, .ui-vestadp-yearlist > td {

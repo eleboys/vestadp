@@ -577,11 +577,18 @@
                 $(element).focus(function() {
                     vdp.display($(this).val());
                     $("div[data-rel='vestadatepicker']").slideUp("fast");
-                    divContainer.slideDown("fast").position({
-                        of: $(this),
-                        my: "right top",
-                        at: "right bottom"
-                    });
+                    divContainer.slideDown("fast");
+                    if ($.ui && $.ui.position) {
+                        var align = opts.direction == "rtl" ? "right" : "left";
+                        divContainer.position({
+                            of: $(this),
+                            my: align + " top",
+                            at: align + " bottom",
+                            collision : 'flip fit'
+                        });
+                    } else {
+                        
+                    }
                 }).click(function(ev) {
                     ev.stopPropagation();
                 });
