@@ -7,7 +7,7 @@
     <script src="js/VestaDatePicker.gregorian.js"></script>
     <script src="js/VestaDatePicker.persian.js"></script>
     <script src="js/VestaDatePicker.js"></script>
-    <link href="css/VestaDatePicker.base.purple.css" type="text/css" rel="stylesheet" />
+    <link href="css/VestaDatePicker.jqui.css" type="text/css" rel="stylesheet" />
     <style>
         body {
             font-size: 10pt;
@@ -15,14 +15,14 @@
     </style>
     <script>
         $(function () {
-            $(".datepicker").vestadp();
-            $("#dpEn").vestadp({
-                dateFormat : "D dd M yy",
-                direction: "ltr",
-                persianNumbers: false,
-                language: 'en',
-                calendar: new window.gregorianCalendar(),
-            });
+            //$(".datepicker").vestadp();
+            //$("#dpEn").vestadp({
+            //    dateFormat : "D dd M yy",
+            //    direction: "ltr",
+            //    persianNumbers: false,
+            //    language: 'en',
+            //    calendar: new window.gregorianCalendar()
+            //});
             $("#medate").vestadp({
                 dateChanged: function (elm, date) {
                     $("#pdate").text(date);

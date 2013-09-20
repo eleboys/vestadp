@@ -64,6 +64,12 @@
             return this.getJulianDay();
         };
 
+        this.setDate = function(year, month, day) {
+            this.setDay(day);
+            this.setMonth(month);
+            this.setYear(year);
+        };
+
         this.addMonth = function (month) {
             if (month == 0)
                 return this.getJulianDay();

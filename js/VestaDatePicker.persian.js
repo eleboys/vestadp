@@ -65,6 +65,12 @@
             return this.getJulianDay();
         };
 
+        this.setDate = function (year, month, day) {
+            this.setDay(day);
+            this.setMonth(month);
+            this.setYear(year);
+        };
+        
         this.addMonth = function (month) {
             if (month == 0)
                 return this.getJulianDay();
@@ -156,7 +162,6 @@
 
         this.toString = function (format) {
             var date = format;
-            console.log(this.getWeekday());
          
             var mapObj = {
                 dd: String.zeroPad(this.day, 2),

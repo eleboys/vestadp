@@ -11,13 +11,8 @@
     margin: 0px;
 }
 
-.ui-vestadp-header, 
-.ui-vestadp-footer {
-    position: relative;
-    background-color: silver;
-}
-
 .ui-vestadp-header {
+    position: relative;
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABkEAAAAAAy19n/AAAAAmJLR0T//xSrMc0AAAAJcEhZcwAAAEgAAABIAEbJaz4AAABaSURBVBjTY3h8jYFOaAPDo/cMj/QYHuYyPGhjuF/BcC+L4W4swx0NhltfGG7uZ7jRzXA9nOGaEsOV4wyXdzJcamW4WM5wYQLD+SaGcwcZzt5iOOvAcObMACIAsZae6pVZewYAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTMtMDUtMDNUMDk6MjE6MDMtMDc6MDAeHtLpAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDEzLTA1LTAzVDA5OjIxOjAzLTA3OjAwb0NqVQAAAABJRU5ErkJggg%3D%3D") repeat-x scroll 50% 50% #CCCCCC;
     border: 1px solid #AAAAAA;
     -ms-border-radius: 2px;
@@ -53,10 +48,6 @@
     color: #212121;
 }
 
-.ui-vestadp-today:hover, .ui-vestadp-clear:hover {
-    background-color: gray;
-    color: white;
-}
 
 .ui-vestadp-container .ui-vestadp-next {
     right: 0;
@@ -76,7 +67,7 @@
 }
 
 
-.ui-vestadp-day,.ui-vestadp-monthlist > td, .ui-vestadp-yearlist > td {
+.ui-vestadp-day,.ui-vestadp-monthlist > td, .ui-vestadp-yearlist > td,.ui-vestadp-today, .ui-vestadp-clear {
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAGQEAAAAAAao4lEAAAAAmJLR0T//xSrMc0AAAAJcEhZcwAAAEgAAABIAEbJaz4AAABISURBVDjLY3iXxzCKRhHV0bNnDM+NGJ7fYXgxk+FlJsOrOIbXIQxvYhjepjK8i2Z4H8DwwZjhIzPDx7UMn+QYPhmOolFEDAIAjUD2JAAuNW8AAAAldEVYdGRhdGU6Y3JlYXRlADIwMTMtMDUtMDNUMDk6MjE6MDMtMDc6MDAeHtLpAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDEzLTA1LTAzVDA5OjIxOjAzLTA3OjAwb0NqVQAAAABJRU5ErkJggg%3D%3D") repeat-x scroll 50% 50% #E6E6E6;
     border: 1px solid #D3D3D3;
     color: #555555;
@@ -88,7 +79,7 @@
     cursor: pointer;
 }
 
-.ui-vestadp-day:hover, .ui-vestadp-monthlist > td:hover, .ui-vestadp-yearlist > td:hover {
+.ui-vestadp-day:hover, .ui-vestadp-monthlist > td:hover, .ui-vestadp-yearlist > td:hover,.ui-vestadp-today:hover, .ui-vestadp-clear:hover {
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAGQEAAAAAAao4lEAAAAAmJLR0T//xSrMc0AAAAJcEhZcwAAAEgAAABIAEbJaz4AAABISURBVDjLY3j6n2EUjSKqo1u3GG57MdxxY7gby3BvIsP9PwwPMxgefWB4Us7w9DHDcz+GF/MYXl5ieHWW4XUpw+uJo2gUEYMAvlejJVIWsXwAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTMtMDUtMDNUMDk6MjE6MDMtMDc6MDAeHtLpAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDEzLTA1LTAzVDA5OjIxOjAzLTA3OjAwb0NqVQAAAABJRU5ErkJggg%3D%3D")  repeat-x scroll 50% 50% #DADADA;
     border: 1px solid #999999;
     color: #212121;
@@ -111,10 +102,29 @@
     cursor: pointer;
 }
 
+.ui-vestadp-footer {
+    position: relative;
+    height: 2.2em;
+}
+
+.ui-vestadp-today {
+    top: 0.1em;
+    left: 0.12em;
+}
+.ui-vestadp-clear {
+    top: 0.1em;
+    right: 0.1em;
+}
 .ui-vestadp-today, .ui-vestadp-clear {
     display: inline-block;
     line-height: 1.8em;
     text-align: center;
     cursor: pointer;
-    width: 50%;
+    position: absolute;
+    width: 8.1em;
+}
+
+.ui-vestadp-today:hover, .ui-vestadp-clear:hover {
+    background-color: gray;
+    color: white;
 }
