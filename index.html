@@ -2,12 +2,14 @@
 <html>
 <head>
     <title>Test VestaDatePicker</title>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery.ui.position.min.js"></script>
-    <script src="js/VestaDatePicker.gregorian.js"></script>
-    <script src="js/VestaDatePicker.persian.js"></script>
-    <script src="js/VestaDatePicker.js"></script>
-    <link href="css/VestaDatePicker.jqui.css" type="text/css" rel="stylesheet" />
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <script src="dist/js/VestaDatePicker.gregorian.js"></script>
+    <script src="dist/js/VestaDatePicker.persian.js"></script>
+    <script src="dist/js/VestaDatePicker.js"></script>
+    <!--<link href="css/VestaDatePicker.jqui.css" type="text/css" rel="stylesheet" />-->
+    <link href="dist/css/VestaDatePicker.base.css" type="text/css" rel="stylesheet" />
+    <!--<link href="css/VestaDatePicker.base.purple.css" type="text/css" rel="stylesheet" />-->
     <style>
         body {
             font-size: 10pt;
@@ -16,13 +18,13 @@
     <script>
         $(function () {
             //$(".datepicker").vestadp();
-            //$("#dpEn").vestadp({
-            //    dateFormat : "D dd M yy",
-            //    direction: "ltr",
-            //    persianNumbers: false,
-            //    language: 'en',
-            //    calendar: new window.gregorianCalendar()
-            //});
+            $("#dpEn").vestadp({
+               dateFormat : "D dd M yy",
+               direction: "ltr",
+               persianNumbers: false,
+               language: 'en',
+               calendar: new window.gregorianCalendar()
+            });
             $("#medate").vestadp({
                 dateChanged: function (elm, date) {
                     $("#pdate").text(date);
