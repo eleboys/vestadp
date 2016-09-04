@@ -3,13 +3,10 @@
 <head>
     <title>Test VestaDatePicker</title>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
-    <script src="dist/js/VestaDatePicker.gregorian.js"></script>
-    <script src="dist/js/VestaDatePicker.persian.js"></script>
-    <script src="dist/js/VestaDatePicker.js"></script>
-    <!--<link href="css/VestaDatePicker.jqui.css" type="text/css" rel="stylesheet" />-->
-    <link href="dist/css/VestaDatePicker.base.css" type="text/css" rel="stylesheet" />
-    <!--<link href="css/VestaDatePicker.base.purple.css" type="text/css" rel="stylesheet" />-->
+    <script src="src/js/VestaDatePicker.gregorian.js"></script>
+    <script src="src/js/VestaDatePicker.persian.js"></script>
+    <script src="src/js/VestaDatePicker.js"></script>
+    <link href="dist/css/_VestaDatePicker.jqui.css" type="text/css" rel="stylesheet" />
     <style>
         body {
             font-size: 10pt;
@@ -38,32 +35,21 @@
 </head>
 <body>
     <p style="text-align: right">
-        <input type="text" id="testdp" style="direction:rtl" />
+        <input type="text" data-default-date="09/05/2016" id="testdp" style="direction:rtl" />
+        Right To Left Sample (Shamsi):
     </p>
     <p>
+        Left To Right Sample (Gregorian)
         <input type="text" id="dpEn" />
     </p>
-    <p>
-        <!--<input  type="text" value="2013-09-10" class="datepicker" data-dir="rtl" />-->
-        <input type="text" value="1390/12/12" class="datepicker" data-dir="rtl" />
-    </p>
-    <p>&nbsp;</p>
+
     <p>&nbsp;</p>
     <p>&nbsp;</p>
     <p>&nbsp;</p>
     <p id="pdate">&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>In Line Sample</p>
     <p id="medate" style="text-align: center">&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p style="text-align: center">
-        <!--<input  type="text" value="2013-01-30" data-dir="ltr"  class="datepicker" id="Text1" />-->
-        <input type="text" value="1392/01/01" data-dir="ltr" class="datepicker" id="txtDate" />
-    </p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
     <p>&nbsp;</p>
 </body>
 </html>

@@ -74,6 +74,7 @@
             renderDayView(settings);
             return;
         };
+
         this.getCalendar = function () {
             return calendar;
         };
@@ -98,7 +99,7 @@
                 calendar.setDate(date.year, date.month, date.day);
                 selectedJulianDay = calendar.getJulianDay();
             } else {
-                selectedJulianDay = gregorianCalendar(date.year, date.month, date.day);
+                selectedJulianDay = gregorianToJd(date.year, date.month, date.day);
                 calendar.setJulianDay(selectedJulianDay);
             }
             var dateStr = calendar.toString(dateFormat);
@@ -647,7 +648,14 @@
                 divContainer.appendTo("body");
                 var vdp = new VestaDatePicker(divContainer, $(element), opts);
                 $(element).data("vestadp", vdp);
-                vdp.display();
+                var selectedDate = $(element).data("selected-date");
+                if (selectedDate){
+                    var d = new Date(selectedDate);
+                    vdp.setDate({year:d.getFullYear(), month: d.getMonth()+1, day: d.getDate()});
+                }else{
+                    vdp.display();
+                }
+
                 $(element).append(divContainer);
             },
             _renderTextbox: function (element, opts) {
@@ -659,17 +667,31 @@
                 divContainer.appendTo("body");
                 var vdp = new VestaDatePicker(divContainer, $(element), opts);
                 $(element).data("vestadp", vdp);
+                var selectedDate = $(element).data("default-date");
                 divContainer.hide();
-                vdp.display($(element).val());
+                if (selectedDate){
+                    var d = new Date(selectedDate);
+                    vdp.setDate({year:d.getFullYear(), month: d.getMonth()+1, day: d.getDate()});
+                }else{
+                    vdp.display($(element).val());
+                }
 
                 $(element).focus(function () {
                     vdp.display($(this).val());
                     $("div[data-rel='vestadatepicker']").slideUp("fast");
-                    divContainer.slideDown("fast").position({
-                        of: $(this),
-                        my: "right top",
-                        at: "right bottom"
+                    var offset = $(this).offset();      
+                    var elmWidth = $(this).outerWidth();
+                    if (opts.direction=="rtl")
+                        left = offset.left - (divContainer.outerWidth() - $(this).outerWidth()) +"px"
+                    else
+                        left = offset.left + "px";
+                    divContainer.slideDown("fast");
+                    divContainer.css({
+                        position: "absolute",
+                        top: offset.top+$(this).outerHeight()+"px",
+                        left: left
                     });
+                    
                 }).click(function (ev) {
                     ev.stopPropagation();
                 });
