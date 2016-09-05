@@ -1,7 +1,7 @@
 {
   "name": "vestadatepicker",
   "description": "VestaDatePicker is a multi culture datepicker that can be feed with your own custom calendar algoritms, as it is included",
-  "main": "src/js/VestaDatePicker.js",
+  "main": ["dist/js/VestaDatePicker.full.min.js","dist/css/VestaDatePicker.css"],
   "authors": [
     "Nima Baghdadi"
   ],
@@ -10,7 +10,11 @@
     "Vesta",
     "Datepicker",
     "Multi",
-    "Culture"
+    "Culture",
+    "Shamsi",
+    "Jalali",
+    "Gregorian",
+    "Miladi"
   ],
   "homepage": "https://github.com/eleboys/vestadp",
   "ignore": [

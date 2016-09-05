@@ -14,7 +14,11 @@
     "Vesta",
     "Datepicker",
     "Multi",
-    "Culture"
+    "Culture",
+    "Shamsi",
+    "Jalali",
+    "Gregorian",
+    "Miladi"
   ],
   "author": "Nima Baghdadi",
   "license": "ISC",
@@ -25,6 +29,9 @@
   "devDependencies": {
     "bower": "^1.7.9",
     "gulp": "^3.9.1",
-    "gulp-sass": "^2.3.2"
+    "gulp-concat": "^2.6.0",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-sass": "^2.3.2",
+    "gulp-uglify": "^2.0.0"
   }
 }

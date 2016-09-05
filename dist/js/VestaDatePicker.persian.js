@@ -1,4 +1,4 @@
-﻿
+
 /* Persian Calendar */
 (function () {
     var PERSIAN_EPOCH = 1948320.5;

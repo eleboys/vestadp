@@ -165,11 +165,11 @@
             currentView = 0;
             $(container).empty().addClass("ui-vestadp-container");
             $(container).append(renderHeader(calendar.getMonthList()[calendar.month - 1] + " " + getNumber(calendar.year, opts.persianNumbers), 'view:month', opts));
-            var calTable = $("<table cellspacing='2'></table>").addClass("ui-vestadp-calendar").css("direction", opts.direction).hide();
-            var weekHeader = $("<tr class='ui-vestadp-weekheader'></tr>");
+            var calTable = $("<div></div>").addClass("ui-vestadp-calendar").css("direction", opts.direction).hide();
+            var weekHeader = $("<div></div>").addClass('ui-vestadp-weekheader');
             var weekdays = calendar.getWeekdayList(true);
             for (var i = 0; i < weekdays.length; i++) {
-                weekHeader.append($("<td></td>").addClass("ui-vestadp-weekday").text(weekdays[i]));
+                weekHeader.append($("<div></div>").addClass("ui-vestadp-weekday").text(weekdays[i]));
             }
             calTable.append(weekHeader);
             var jd = calendar.getJulianDay();
@@ -178,9 +178,9 @@
             var firstdow = calendar.getWeekday();
             calendar.addDay(-1 * firstdow);
             for (i = 0; i < 6; i++) {
-                var wrow = $("<tr></tr>");
+                var wrow = $("<div></div>");
                 for (var j = 0; j < 7; j++) {
-                    var wday = $("<td data-event='click' data-handler='date' data-args='day:" + calendar.day + ",month:" + calendar.month + "'></td>").addClass("ui-vestadp-day").text(getNumber(calendar.day, opts.persianNumbers));
+                    var wday = $("<div data-event='click' data-handler='date' data-args='day:" + calendar.day + ",month:" + calendar.month + "'></div>").addClass("ui-vestadp-day").text(getNumber(calendar.day, opts.persianNumbers));
                     if (calendar.month != currentMonth)
                         wday.addClass("ui-vestadp-inactive");
                     if (calendar.getJulianDay() == selectedJulianDay)
