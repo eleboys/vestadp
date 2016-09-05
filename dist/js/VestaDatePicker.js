@@ -49,7 +49,7 @@
         if (typeof (container) == "undefined")
             return;
         var settings = options; //$.extend(vestaDatePicker.defaultSettings, options);
-        var calendar = settings.calendar;
+        var calendar = new window[settings.calendar + 'Calendar' ]();
         var dateFormat = settings.dateFormat ? settings.dateFormat : calendar.defaultDateFormat;
         var selectedJulianDay = 0;
         var currentView = 0; // 0 = dayView; 1 = month view; 2 = year view
@@ -581,16 +581,10 @@
             }
         },
         language: 'fa',
-        calendar: new window.persianCalendar(),
+        calendar: "persian", // [gregorian & persian] are available.
         dateChanged: function () { },
         showInline: false
     };
-
-    //vestaDatePicker.defaultSettings = {
-    //        direction: "ltr",
-    //        dateFormat: "", // default dateFromat of each calendar
-    //        calendar: new window.gregorianCalendar()
-    //};
 
     window.VestaDatePicker = vestaDatePicker;
 })();
@@ -648,13 +642,7 @@
                 divContainer.appendTo("body");
                 var vdp = new VestaDatePicker(divContainer, $(element), opts);
                 $(element).data("vestadp", vdp);
-                var selectedDate = $(element).data("selected-date");
-                if (selectedDate){
-                    var d = new Date(selectedDate);
-                    vdp.setDate({year:d.getFullYear(), month: d.getMonth()+1, day: d.getDate()});
-                }else{
-                    vdp.display();
-                }
+                vdp.display();
 
                 $(element).append(divContainer);
             },
@@ -667,14 +655,8 @@
                 divContainer.appendTo("body");
                 var vdp = new VestaDatePicker(divContainer, $(element), opts);
                 $(element).data("vestadp", vdp);
-                var selectedDate = $(element).data("default-date");
                 divContainer.hide();
-                if (selectedDate){
-                    var d = new Date(selectedDate);
-                    vdp.setDate({year:d.getFullYear(), month: d.getMonth()+1, day: d.getDate()});
-                }else{
-                    vdp.display($(element).val());
-                }
+                vdp.display($(element).val());
 
                 $(element).focus(function () {
                     vdp.display($(this).val());

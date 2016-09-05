@@ -14,14 +14,13 @@
     </style>
     <script>
         $(function () {
-            //$(".datepicker").vestadp();
             $("#dpEn").vestadp({
                dateFormat : "D dd M yy",
                direction: "ltr",
                showFooter: false,
                persianNumbers: false,
                language: 'en',
-               calendar: new window.gregorianCalendar()
+               calendar: "gregorian"
             });
             $("#medate").vestadp({
                 dateChanged: function (elm, date) {
@@ -36,7 +35,7 @@
 </head>
 <body>
     <p style="text-align: right">
-        <input type="text" data-default-date="09/05/2016" id="testdp" style="direction:rtl" />
+        <input type="text" id="testdp" style="direction:rtl" />
         Right To Left Sample (Shamsi):
     </p>
     <p>
