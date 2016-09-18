@@ -40,7 +40,7 @@
         };
     }
 })();
-
+ 
 
 /* Vesta Date Picker */
 (function () {

@@ -11,7 +11,7 @@ gulp.task('sass', function () {
         .pipe(sass({ outputStyle: "compressed" }).on('error', sass.logError))
         .pipe(gulp.dest('dist/css/'));
 });
-
+ 
 gulp.task('js', function () {
     gulp.src(['src/js/VestaDatePicker.persian.js', 'src/js/VestaDatePicker.gregorian.js', 'src/js/VestaDatePicker.js'])
         .pipe(concat('VestaDatePicker.full.min.js'))
