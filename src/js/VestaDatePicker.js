@@ -1,4 +1,5 @@
-﻿(function () {
+﻿
+(function () {
     /*  MOD  --  Modulus function which works for non-integers.  */
     Math.mod = function (a, b) {
         return a - (b * Math.floor(a / b));
@@ -66,7 +67,12 @@
                 return;
             }
 
-            var date = parseDate(dateFormat, strDate);
+            try {
+                var date = parseDate(dateFormat, strDate);
+            } catch(ex){
+                // do nothing when datestring cant be parsed
+                return;
+            }
             calendar.day = date.day > 0 ? date.day : this.day;
             calendar.month = date.month > 0 ? date.month : this.month;
             calendar.year = date.year > 0 ? date.year : this.year;
@@ -674,7 +680,11 @@
                         left: left
                     });
                     
-                }).click(function (ev) {
+                })
+                .on('input propertychange paste',function(){
+                    vdp.display($(this).val());
+                })
+                .click(function (ev) {
                     ev.stopPropagation();
                 });
 

@@ -10,7 +10,7 @@
         var months = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
         var monthsAbbr = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec");
         var firstDayOfWeek = 0;//window.VestaDatePicker.WeekDayEnum.Sunday;
-
+ 
         this.defaultDateFormat = "yy-mm-dd";
 
         this.addDay = function (dayN) {
