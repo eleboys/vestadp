@@ -1,4 +1,5 @@
-﻿(function () {
+
+(function () {
     /*  MOD  --  Modulus function which works for non-integers.  */
     Math.mod = function (a, b) {
         return a - (b * Math.floor(a / b));
@@ -40,7 +41,7 @@
         };
     }
 })();
-
+ 
 
 /* Vesta Date Picker */
 (function () {
@@ -49,7 +50,7 @@
         if (typeof (container) == "undefined")
             return;
         var settings = options; //$.extend(vestaDatePicker.defaultSettings, options);
-        var calendar = settings.calendar;
+        var calendar = new window[settings.calendar + 'Calendar' ]();
         var dateFormat = settings.dateFormat ? settings.dateFormat : calendar.defaultDateFormat;
         var selectedJulianDay = 0;
         var currentView = 0; // 0 = dayView; 1 = month view; 2 = year view
@@ -66,7 +67,12 @@
                 return;
             }
 
-            var date = parseDate(dateFormat, strDate);
+            try {
+                var date = parseDate(dateFormat, strDate);
+            } catch(ex){
+                // do nothing when datestring cant be parsed
+                return;
+            }
             calendar.day = date.day > 0 ? date.day : this.day;
             calendar.month = date.month > 0 ? date.month : this.month;
             calendar.year = date.year > 0 ? date.year : this.year;
@@ -74,6 +80,7 @@
             renderDayView(settings);
             return;
         };
+
         this.getCalendar = function () {
             return calendar;
         };
@@ -98,7 +105,7 @@
                 calendar.setDate(date.year, date.month, date.day);
                 selectedJulianDay = calendar.getJulianDay();
             } else {
-                selectedJulianDay = gregorianCalendar(date.year, date.month, date.day);
+                selectedJulianDay = gregorianToJd(date.year, date.month, date.day);
                 calendar.setJulianDay(selectedJulianDay);
             }
             var dateStr = calendar.toString(dateFormat);
@@ -164,11 +171,11 @@
             currentView = 0;
             $(container).empty().addClass("ui-vestadp-container");
             $(container).append(renderHeader(calendar.getMonthList()[calendar.month - 1] + " " + getNumber(calendar.year, opts.persianNumbers), 'view:month', opts));
-            var calTable = $("<table cellspacing='2'></table>").addClass("ui-vestadp-calendar").css("direction", opts.direction).hide();
-            var weekHeader = $("<tr class='ui-vestadp-weekheader'></tr>");
+            var calTable = $("<div></div>").addClass("ui-vestadp-calendar").css("direction", opts.direction).hide();
+            var weekHeader = $("<div></div>").addClass('ui-vestadp-weekheader');
             var weekdays = calendar.getWeekdayList(true);
             for (var i = 0; i < weekdays.length; i++) {
-                weekHeader.append($("<td></td>").addClass("ui-vestadp-weekday").text(weekdays[i]));
+                weekHeader.append($("<div></div>").addClass("ui-vestadp-weekday").text(weekdays[i]));
             }
             calTable.append(weekHeader);
             var jd = calendar.getJulianDay();
@@ -177,9 +184,9 @@
             var firstdow = calendar.getWeekday();
             calendar.addDay(-1 * firstdow);
             for (i = 0; i < 6; i++) {
-                var wrow = $("<tr></tr>");
+                var wrow = $("<div></div>");
                 for (var j = 0; j < 7; j++) {
-                    var wday = $("<td data-event='click' data-handler='date' data-args='day:" + calendar.day + ",month:" + calendar.month + "'></td>").addClass("ui-vestadp-day").text(getNumber(calendar.day, opts.persianNumbers));
+                    var wday = $("<div data-event='click' data-handler='date' data-args='day:" + calendar.day + ",month:" + calendar.month + "'></div>").addClass("ui-vestadp-day").text(getNumber(calendar.day, opts.persianNumbers));
                     if (calendar.month != currentMonth)
                         wday.addClass("ui-vestadp-inactive");
                     if (calendar.getJulianDay() == selectedJulianDay)
@@ -580,16 +587,10 @@
             }
         },
         language: 'fa',
-        calendar: new window.persianCalendar(),
+        calendar: "persian", // [gregorian & persian] are available.
         dateChanged: function () { },
         showInline: false
     };
-
-    //vestaDatePicker.defaultSettings = {
-    //        direction: "ltr",
-    //        dateFormat: "", // default dateFromat of each calendar
-    //        calendar: new window.gregorianCalendar()
-    //};
 
     window.VestaDatePicker = vestaDatePicker;
 })();
@@ -648,6 +649,7 @@
                 var vdp = new VestaDatePicker(divContainer, $(element), opts);
                 $(element).data("vestadp", vdp);
                 vdp.display();
+
                 $(element).append(divContainer);
             },
             _renderTextbox: function (element, opts) {
@@ -665,12 +667,24 @@
                 $(element).focus(function () {
                     vdp.display($(this).val());
                     $("div[data-rel='vestadatepicker']").slideUp("fast");
-                    divContainer.slideDown("fast").position({
-                        of: $(this),
-                        my: "right top",
-                        at: "right bottom"
+                    var offset = $(this).offset();      
+                    var elmWidth = $(this).outerWidth();
+                    if (opts.direction=="rtl")
+                        left = offset.left - (divContainer.outerWidth() - $(this).outerWidth()) +"px"
+                    else
+                        left = offset.left + "px";
+                    divContainer.slideDown("fast");
+                    divContainer.css({
+                        position: "absolute",
+                        top: offset.top+$(this).outerHeight()+"px",
+                        left: left
                     });
-                }).click(function (ev) {
+                    
+                })
+                .on('input propertychange paste',function(){
+                    vdp.display($(this).val());
+                })
+                .click(function (ev) {
                     ev.stopPropagation();
                 });
 

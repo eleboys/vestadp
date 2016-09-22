@@ -1,4 +1,4 @@
-﻿
+
 /* Persian Calendar */
 (function () {
     var PERSIAN_EPOCH = 1948320.5;
@@ -11,7 +11,7 @@
         var months = new Array("فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند");
         var monthsAbbr = new Array("فروردین", "اردی", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند");
         var firstDayOfWeek = 6;//window.VestaDatePicker.WeekDayEnum.Saturday;
-
+ 
         this.defaultDateFormat = "yy/mm/dd";
 
         this.addDay = function (dayN) {

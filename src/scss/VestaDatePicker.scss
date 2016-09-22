@@ -1,0 +1,142 @@
+$main_color: #1D508D;
+$main_color_hover: lighten($main_color, 10%);
+$text_color_inactive:  lighten($main_color, 30%);
+$text_color: #fff;
+$text_color_hover: #fff;
+$background_color: #fff;
+$header_height: 35px;
+$header_font_size: 15pt;
+$border_color: $main_color_hover;
+
+ 
+.ui-vestadp-container {
+  padding: 2px;
+  width: 17em;
+  border: solid 1px $border_color;
+  font-family: tahoma;
+  background-color: $background_color;
+  tbody, td {
+    padding: 0px;
+    margin: 0px;
+  }
+}
+
+.ui-vestadp-header, .ui-vestadp-footer {
+  position: relative;
+  background-color: $main_color;
+  color:$text_color;
+  width: 100%;
+}
+
+
+
+.ui-vestadp-header{
+  font-size: $header_font_size;
+  .ui-vestadp-title {
+    height: $header_height;
+    text-align: center;
+    cursor: pointer;
+    margin-left: 30px;
+    margin-right: 30px;
+    padding-top: 5px;
+  }
+  .ui-vestadp-prev {
+    cursor: pointer;
+    height: $header_height;    
+    left: 0;
+    position: absolute;
+    text-align: center;
+    width: 30px;
+    font-weight: bold;
+    padding-top: 5px;
+    &:hover {
+      background-color: $main_color_hover;
+      color: $text_color;
+    }
+  }
+  .ui-vestadp-next {
+    cursor: pointer;
+    height: $header_height;  
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    width: 30px;
+    font-weight: bold;
+    padding-top: 5px;
+    &:hover{
+        background-color: $main_color_hover;
+        color: $text_color;
+    }
+  }  
+}
+
+.ui-vestadp-title:hover, .ui-vestadp-today:hover, .ui-vestadp-clear:hover {
+  background-color: $main_color_hover;
+  color: $text_color;
+}
+
+
+.ui-vestadp-calendar {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.ui-vestadp-weekheader {
+    margin-top:5px;
+    margin-bottom: 5px;
+    border-bottom: solid 1px lighten($main_color, 50%);
+    .ui-vestadp-weekday {
+        font-weight: bold;
+        text-align: center;
+        padding: 5px 0 5px 0;
+        display: inline-block;
+        width: 13.4%;
+        margin: 1px;
+    }
+}
+
+.ui-vestadp-day {
+  text-align: center;
+  line-height: 1.6em;
+  cursor: pointer;
+    display: inline-block;
+    width: 13.4%;
+    margin: 1px;      
+  &:hover {
+    color: $text_color;
+    background-color: $main_color_hover;
+  }
+}
+
+.ui-vestadp-monthlist > td:hover, .ui-vestadp-yearlist > td:hover {
+  color: $text_color;
+  background-color: $main_color_hover;
+}
+
+.ui-vestadp-day.ui-vestadp-selected, .ui-vestadp-monthlist > td.ui-vestadp-selected, .ui-vestadp-yearlist > td.ui-vestadp-selected {
+  color: $text_color;
+  background-color: $main_color;
+}
+
+.ui-vestadp-day.ui-vestadp-inactive {
+  color: $text_color_inactive;
+  &:hover{
+      color:$text_color_hover !important;
+  }
+}
+
+.ui-vestadp-monthlist > td, .ui-vestadp-yearlist > td {
+  line-height: 4.5em;
+  text-align: center;
+  width: 25%;
+  cursor: pointer;
+}
+
+.ui-vestadp-today, .ui-vestadp-clear {
+  display: inline-block;
+  line-height: 1.8em;
+  text-align: center;
+  cursor: pointer;
+  width: 50%;
+}
