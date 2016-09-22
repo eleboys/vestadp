@@ -233,31 +233,23 @@
         return { year: year, month: month, day: day };
     };
     persianCalendar.getDaysInMonth = function (year, month) {
-        var days = -1;
-        switch (month) {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-                days = 31;
-                break;
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-            case 11:
-                days = 30;
-                break;
-            case 12:
-                days = persianCalendar.isLeap(year) ? 30 : 29;
-                break;
-            default:
-                days = -1;
-                break;
-        }
-        return days;
+        if (month<1 || month>12 || !year)
+            return -1;
+        var numOfDays = [
+            31, //Farvardin
+            31, //Oridibehest
+            31, //Khordad
+            31, //Tir
+            31, //Mordad
+            31, //Shahrivar
+            30, //Mehr
+            30, //Aban
+            30, //Azar
+            30, //Day
+            30, //Bahman
+            persianCalendar.isLeap(year) ? 30 : 29  //Esfand
+        ];        
+        return numOfDays[month-1];
     };
     window.persianCalendar = persianCalendar;
 })();
