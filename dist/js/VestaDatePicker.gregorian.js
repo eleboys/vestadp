@@ -79,14 +79,14 @@
             if (month > 0) {
                 month += this.month;
                 year += Math.floor(month / 13);
-                month = month > 12 ? Math.mod(month, 12) : month;
+                month = month > 12 ? mod(month, 12) : month;
             } else {
                 month += this.month;
                 if (month < 0) {
                     month -= this.month;
                     year -= Math.ceil(-month / 13);
                     month *= -1;
-                    month = 12 - (month > 12 ? Math.mod(month, 12) : month);
+                    month = 12 - (month > 12 ? mod(month, 12) : month);
                 }
                 if (month == 0) {
                     year -= 1;
@@ -119,7 +119,7 @@
 
         this.getWeekday = function () {
             var jd = gregorianCalendar.toJulianDay(this.year, this.month, this.day);
-            var wday = Math.mod(Math.floor((jd + 1.5)), 7);
+            var wday = mod(Math.floor((jd + 1.5)), 7);
             return this.getWeekdayList().indexOf(weekdays[wday]);
         };
 
@@ -181,6 +181,10 @@
 
             return date;
         };
+
+        function mod(a, b) {
+            return a - (b * Math.floor(a / b));
+        };
     };
     gregorianCalendar.isLeap = function (year) {
         return ((year % 4) == 0) && (!(((year % 100) == 0) && ((year % 400) != 0)));
@@ -203,11 +207,11 @@
         wjd = Math.floor(jd - 0.5) + 0.5;
         depoch = wjd - GREGORIAN_EPOCH;
         quadricent = Math.floor(depoch / 146097);
-        dqc = Math.mod(depoch, 146097);
+        dqc = mod(depoch, 146097);
         cent = Math.floor(dqc / 36524);
-        dcent = Math.mod(dqc, 36524);
+        dcent = mod(dqc, 36524);
         quad = Math.floor(dcent / 1461);
-        dquad = Math.mod(dcent, 1461);
+        dquad = mod(dcent, 1461);
         yindex = Math.floor(dquad / 365);
         year = (quadricent * 400) + (cent * 100) + (quad * 4) + yindex;
         if (!((cent == 4) || (yindex == 4))) {

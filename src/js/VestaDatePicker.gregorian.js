@@ -79,14 +79,14 @@
             if (month > 0) {
                 month += this.month;
                 year += Math.floor(month / 13);
-                month = month > 12 ? Math.mod(month, 12) : month;
+                month = month > 12 ? mod(month, 12) : month;
             } else {
                 month += this.month;
                 if (month < 0) {
                     month -= this.month;
                     year -= Math.ceil(-month / 13);
                     month *= -1;
-                    month = 12 - (month > 12 ? Math.mod(month, 12) : month);
+                    month = 12 - (month > 12 ? mod(month, 12) : month);
                 }
                 if (month == 0) {
                     year -= 1;
@@ -119,7 +119,7 @@
 
         this.getWeekday = function () {
             var jd = gregorianCalendar.toJulianDay(this.year, this.month, this.day);
-            var wday = Math.mod(Math.floor((jd + 1.5)), 7);
+            var wday = mod(Math.floor((jd + 1.5)), 7);
             return this.getWeekdayList().indexOf(weekdays[wday]);
         };
 
@@ -162,9 +162,9 @@
         this.toString = function (format) {
             var date = format;
             var mapObj = {
-                dd: String.zeroPad(this.day, 2),
-                mm: String.zeroPad(this.month, 2),
-                yy: String.zeroPad(this.year, 4),
+                dd: zeroPad(this.day, 2),
+                mm: zeroPad(this.month, 2),
+                yy: zeroPad(this.year, 4),
                 d: this.day,
                 m: this.month,
                 y: this.year,
@@ -203,11 +203,11 @@
         wjd = Math.floor(jd - 0.5) + 0.5;
         depoch = wjd - GREGORIAN_EPOCH;
         quadricent = Math.floor(depoch / 146097);
-        dqc = Math.mod(depoch, 146097);
+        dqc = mod(depoch, 146097);
         cent = Math.floor(dqc / 36524);
-        dcent = Math.mod(dqc, 36524);
+        dcent = mod(dqc, 36524);
         quad = Math.floor(dcent / 1461);
-        dquad = Math.mod(dcent, 1461);
+        dquad = mod(dcent, 1461);
         yindex = Math.floor(dquad / 365);
         year = (quadricent * 400) + (cent * 100) + (quad * 4) + yindex;
         if (!((cent == 4) || (yindex == 4))) {
@@ -238,6 +238,13 @@
             31  //December
         ];        
         return numOfDays[month-1];
+    };
+    function zeroPad(num, places) {
+        var zero = places - num.toString().length + 1;
+        return Array(+(zero > 0 && zero)).join("0") + num;
+    };    
+    function mod(a, b) {
+        return a - (b * Math.floor(a / b));
     };
     window.gregorianCalendar = gregorianCalendar;
 })();

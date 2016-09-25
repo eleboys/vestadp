@@ -80,14 +80,14 @@
             if (month > 0) {
                 month += this.month;
                 year += Math.floor(month / 13);
-                month = month > 12 ? Math.mod(month, 12) : month;
+                month = month > 12 ? mod(month, 12) : month;
             } else {
                 month += this.month;
                 if (month < 0) {
                     month -= this.month;
                     year -= Math.ceil(-month / 13);
                     month *= -1;
-                    month = 12 - (month > 12 ? Math.mod(month, 12) : month);
+                    month = 12 - (month > 12 ? mod(month, 12) : month);
                 }
                 if (month == 0) {
                     year -= 1;
@@ -120,7 +120,7 @@
 
         this.getWeekday = function () {
             var jd = persianCalendar.toJulianDay(this.year, this.month, this.day);
-            var wday = Math.mod(Math.floor((jd + 1.5)), 7);
+            var wday = mod(Math.floor((jd + 1.5)), 7);
             return this.getWeekdayList().indexOf(weekdays[wday]);
         };
 
@@ -183,7 +183,9 @@
 
             return date;
         };
-
+        function mod(a, b) {
+            return a - (b * Math.floor(a / b));
+        };
     };
     persianCalendar.isLeap = function (year) {
         return ((((((year - ((year > 0) ? 474 : 473)) % 2820) + 474) + 38) * 682) % 2816) < 682;
@@ -192,7 +194,7 @@
         var epbase, epyear;
 
         epbase = year - ((year >= 0) ? 474 : 473);
-        epyear = 474 +Math.mod(epbase, 2820);
+        epyear = 474 +mod(epbase, 2820);
 
         return day +
                 ((month <= 7) ?
@@ -213,12 +215,12 @@
 
         depoch = jd - persianCalendar.toJulianDay(475, 1, 1);
         cycle = Math.floor(depoch / 1029983);
-        cyear = Math.mod(depoch, 1029983);
+        cyear = mod(depoch, 1029983);
         if (cyear == 1029982) {
             ycycle = 2820;
         } else {
             aux1 = Math.floor(cyear / 366);
-            aux2 = Math.mod(cyear, 366);
+            aux2 = mod(cyear, 366);
             ycycle = Math.floor(((2134 * aux1) + (2816 * aux2) + 2815) / 1028522) +
                         aux1 + 1;
         }
@@ -233,31 +235,23 @@
         return { year: year, month: month, day: day };
     };
     persianCalendar.getDaysInMonth = function (year, month) {
-        var days = -1;
-        switch (month) {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-                days = 31;
-                break;
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-            case 11:
-                days = 30;
-                break;
-            case 12:
-                days = persianCalendar.isLeap(year) ? 30 : 29;
-                break;
-            default:
-                days = -1;
-                break;
-        }
-        return days;
+        if (month<1 || month>12 || !year)
+            return -1;
+        var numOfDays = [
+            31, //Farvardin
+            31, //Oridibehest
+            31, //Khordad
+            31, //Tir
+            31, //Mordad
+            31, //Shahrivar
+            30, //Mehr
+            30, //Aban
+            30, //Azar
+            30, //Day
+            30, //Bahman
+            persianCalendar.isLeap(year) ? 30 : 29  //Esfand
+        ];        
+        return numOfDays[month-1];
     };
     window.persianCalendar = persianCalendar;
 })();

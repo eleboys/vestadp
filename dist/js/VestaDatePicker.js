@@ -1,45 +1,10 @@
 
 (function () {
-    /*  MOD  --  Modulus function which works for non-integers.  */
-    Math.mod = function (a, b) {
-        return a - (b * Math.floor(a / b));
-    };
+
     String.zeroPad = function (num, places) {
         var zero = places - num.toString().length + 1;
         return Array(+(zero > 0 && zero)).join("0") + num;
     };
-    if (!Array.prototype.indexOf) {
-        Array.prototype.indexOf = function (searchElement /*, fromIndex */) {
-            'use strict';
-            if (this == null) {
-                throw new TypeError();
-            }
-            var n, k, t = Object(this),
-                len = t.length >>> 0;
-
-            if (len === 0) {
-                return -1;
-            }
-            n = 0;
-            if (arguments.length > 1) {
-                n = Number(arguments[1]);
-                if (n != n) { // shortcut for verifying if it's NaN
-                    n = 0;
-                } else if (n != 0 && n != Infinity && n != -Infinity) {
-                    n = (n > 0 || -1) * Math.floor(Math.abs(n));
-                }
-            }
-            if (n >= len) {
-                return -1;
-            }
-            for (k = n >= 0 ? n : Math.max(len - Math.abs(n), 0) ; k < len; k++) {
-                if (k in t && t[k] === searchElement) {
-                    return k;
-                }
-            }
-            return -1;
-        };
-    }
 })();
  
 
@@ -402,11 +367,11 @@
             wjd = Math.floor(jd - 0.5) + 0.5;
             depoch = wjd - GREGORIAN_EPOCH;
             quadricent = Math.floor(depoch / 146097);
-            dqc = Math.mod(depoch, 146097);
+            dqc = mod(depoch, 146097);
             cent = Math.floor(dqc / 36524);
-            dcent = Math.mod(dqc, 36524);
+            dcent = mod(dqc, 36524);
             quad = Math.floor(dcent / 1461);
-            dquad = Math.mod(dcent, 1461);
+            dquad = mod(dcent, 1461);
             yindex = Math.floor(dquad / 365);
             year = (quadricent * 400) + (cent * 100) + (quad * 4) + yindex;
             if (!((cent == 4) || (yindex == 4))) {
@@ -420,6 +385,10 @@
 
             return { year: year, month: month, day: day };
         }
+
+        function mod(a, b) {
+            return a - (b * Math.floor(a / b));
+        };
 
         function parseDate(format, value) {
             if (format == null || value == null) {
