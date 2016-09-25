@@ -16,3 +16,22 @@ Features
 6. Multiple calendar algoritms can be used in a page at same time
 7. Inline and Input Datepicker
 8. LTR and RTL support
+
+Installation
+---------------
+**Bower:**
+
+```
+bower install vestadp --save
+```
+
+**Usage:**
+
+```html
+
+    <link href="VestaDatePicker.css" type="text/css" rel="stylesheet" />
+    <script src="jquery.min.js"></script>
+    <script src="VestaDatePicker.gregorian.js"></script>
+    <script src="VestaDatePicker.persian.js"></script>
+    <script src="VestaDatePicker.js"></script>
+```
