@@ -35,3 +35,12 @@ bower install vestadp --save
     <script src="VestaDatePicker.persian.js"></script>
     <script src="VestaDatePicker.js"></script>
 ```
+
+Links
+-------
+
+Angular directive is also provided: ([Look here for the source](https://github.com/eleboys/ng-vestadp))
+
+```
+bower install ng-vestadp --save
+```
