@@ -162,9 +162,9 @@
         this.toString = function (format) {
             var date = format;
             var mapObj = {
-                dd: String.zeroPad(this.day, 2),
-                mm: String.zeroPad(this.month, 2),
-                yy: String.zeroPad(this.year, 4),
+                dd: zeroPad(this.day, 2),
+                mm: zeroPad(this.month, 2),
+                yy: zeroPad(this.year, 4),
                 d: this.day,
                 m: this.month,
                 y: this.year,
@@ -180,10 +180,6 @@
             });
 
             return date;
-        };
-
-        function mod(a, b) {
-            return a - (b * Math.floor(a / b));
         };
     };
     gregorianCalendar.isLeap = function (year) {
@@ -243,5 +239,12 @@
         ];        
         return numOfDays[month-1];
     };
+    function zeroPad(num, places) {
+        var zero = places - num.toString().length + 1;
+        return Array(+(zero > 0 && zero)).join("0") + num;
+    };    
+    function mod(a, b) {
+        return a - (b * Math.floor(a / b));
+    }; 
     window.gregorianCalendar = gregorianCalendar;
 })();

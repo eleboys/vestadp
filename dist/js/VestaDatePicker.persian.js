@@ -183,9 +183,6 @@
 
             return date;
         };
-        function mod(a, b) {
-            return a - (b * Math.floor(a / b));
-        };
     };
     persianCalendar.isLeap = function (year) {
         return ((((((year - ((year > 0) ? 474 : 473)) % 2820) + 474) + 38) * 682) % 2816) < 682;
@@ -253,6 +250,13 @@
         ];        
         return numOfDays[month-1];
     };
+    function zeroPad(num, places) {
+        var zero = places - num.toString().length + 1;
+        return Array(+(zero > 0 && zero)).join("0") + num;
+    };  
+    function mod(a, b) {
+        return a - (b * Math.floor(a / b));
+    }; 
     window.persianCalendar = persianCalendar;
 })();
 
