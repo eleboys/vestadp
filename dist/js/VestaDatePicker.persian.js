@@ -164,9 +164,9 @@
             var date = format;
          
             var mapObj = {
-                dd: String.zeroPad(this.day, 2),
-                mm: String.zeroPad(this.month, 2),
-                yy: String.zeroPad(this.year, 4),
+                dd: zeroPad(this.day, 2),
+                mm: zeroPad(this.month, 2),
+                yy: zeroPad(this.year, 4),
                 d: this.day,
                 m: this.month,
                 y: this.year,
