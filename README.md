@@ -36,6 +36,31 @@ bower install vestadp --save
     <script src="VestaDatePicker.js"></script>
 ```
 
+```javascript
+    $("#input1").vestadp({
+        dateFormat : "D dd M yy",
+        direction: "ltr",
+        showFooter: false,
+        persianNumbers: false,
+        language: 'en',
+        calendar: "gregorian"
+    });
+
+    $("#input2").vestadp({
+        dateChanged: function (elm, dateStr) {
+            $("#pdate").text(dateStr);  // formated date
+        }
+    });
+    
+    $("#input3").vestadp({                
+        dateFormat : "DD dd MM yy" ,
+        dateChanged: function(elm, dateStr, calendar){
+            var date = elm.vestadp('getDate'); // original javascript date object
+            alert(date);
+        }
+    });
+```
+
 Links
 -------
 

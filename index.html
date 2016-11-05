@@ -22,12 +22,16 @@
                calendar: "gregorian"
             });
             $("#medate").vestadp({
-                dateChanged: function (elm, date) {
-                    $("#pdate").text(date);
+                dateChanged: function (elm, dateStr) {
+                    $("#pdate").text(dateStr);  // formated date
                 }
             });
             $("#testdp").vestadp({                
-               dateFormat : "DD dd MM yy" 
+               dateFormat : "DD dd MM yy" ,
+               dateChanged: function(elm, dateStr, calendar){
+                   var date = elm.vestadp('getDate'); // original javascript date object
+                   alert(date);
+               }
             });
         });
     </script>
