@@ -13,7 +13,8 @@ gulp.task('sass', function () {
 });
  
 gulp.task('js', function () {
-    gulp.src(['src/js/VestaDatePicker.persian.js', 'src/js/VestaDatePicker.gregorian.js', 'src/js/VestaDatePicker.js'])
+    gulp.src(['src/js/VestaDatePicker.persian.js', 'src/js/VestaDatePicker.hijri.js', 
+              'src/js/VestaDatePicker.gregorian.js', 'src/js/VestaDatePicker.js'])
         .pipe(concat('VestaDatePicker.full.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('dist/js/'));
