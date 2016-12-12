@@ -1,8 +1,7 @@
 What is VestaDatePicker?
 ------------------------
 
-VestaDatePicker is a multi culture datepicker in form of JQuery plugin that can be feed with your own custom calendar algoritms, as it is included
-with some of the most known calendars such as "Gregorian", "Persian" and "Hijri".
+VestaDatePicker is a multi-culture date picker in form of JQuery plugin that can be feed with your own custom calendar algorithms, as it is included with some of the most known calendars such as "Gregorian", "Persian" and "Hijri".
 
 ![alt text](http://uupload.ir/files/o7p3_datepicker.jpg)
 
