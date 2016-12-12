@@ -544,7 +544,13 @@
                 clear: "Clear",
                 previous: "Previous",
                 next: "Next"
-            }
+            },
+            "ar": {
+                today: "الیوم",
+                clear: "واضح",
+                previous: "سابق",
+                next: "التالی"
+            }            
         },
         language: 'fa',
         calendar: "persian", // [gregorian & persian] are available.
