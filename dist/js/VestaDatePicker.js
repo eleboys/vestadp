@@ -11,15 +11,12 @@
         var selectedJulianDay = 0;
         var currentView = 0; // 0 = dayView; 1 = month view; 2 = year view
         var startYear, endYear;
+        var that = this;
         mouseWheelBinder(container);
 
-        this.display = function (strDate) {
-            if (typeof (strDate) === "undefined" || strDate == "") {
-                var today = new Date();
-                var todayJd = gregorianToJd(today.getFullYear(), today.getMonth() + 1, today.getDate());
-                calendar.setJulianDay(todayJd);
-                selectedJulianDay = todayJd;
-                renderDayView(settings);
+        this.display = function (strDate, raiseChange) {
+            if (typeof (strDate) === "undefined" || !strDate) {
+                this.setDate(null, false, false);
                 return;
             }
 
@@ -29,11 +26,7 @@
                 // do nothing when datestring cant be parsed
                 return;
             }
-            calendar.day = date.day > 0 ? date.day : this.day;
-            calendar.month = date.month > 0 ? date.month : this.month;
-            calendar.year = date.year > 0 ? date.year : this.year;
-            selectedJulianDay = calendar.getJulianDay();
-            renderDayView(settings);
+            this.setDate(date, true, false);
             return;
         };
 
@@ -42,6 +35,9 @@
         };
 
         this.getDate = function (cultured, dateF) {
+            if (selectedJulianDay == 0){
+                return null;
+            }
             if (cultured) {
                 dateF = typeof(dateF) !== "undefined" ? dateF : dateFormat;
                 return calendar.toString(dateF);
@@ -51,8 +47,18 @@
             }
         };
 
-        this.setDate = function (date, cultured) {
-            if (typeof (date) === "undefined" || (!date.hasOwnProperty("year") && !date.hasOwnProperty("month") && !date.hasOwnProperty("day")))
+        this.setDate = function (date, cultured, raiseChange) {
+            if (!date) {
+                selectedJulianDay = 0;
+                calendar.setJulianDay(getTodayJulianDate());                
+                renderDayView(settings);
+                setElementValue("");     
+                if (raiseChange) {         
+                    settings.dateChanged(element, null, calendar);
+                }
+                return;
+            }
+            if ((!date.hasOwnProperty("year") && !date.hasOwnProperty("month") && !date.hasOwnProperty("day")))
                 throw "argument exception, date";
             date.month = typeof (date.month) === "undefined" || isNaN(date.month.toString()) ? calendar.month : date.month;
             date.day = typeof (date.day) === "undefined" || isNaN(date.day.toString()) ? calendar.day : date.day;
@@ -65,12 +71,18 @@
                 calendar.setJulianDay(selectedJulianDay);
             }
             var dateStr = calendar.toString(dateFormat);
-            settings.dateChanged(element, dateStr, calendar);
-            if (typeof (element) !== "undefined") {
-                element.val(dateStr);
+            if (raiseChange) {
+                settings.dateChanged(element, dateStr, calendar);
             }
+            setElementValue(dateStr);
             renderDayView(settings);
         };
+
+        function setElementValue(val) {
+            if (typeof (element) !== "undefined") {
+                element.val(val);
+            }
+        }
 
         function displaywheel(e) {
             //equalize event object
@@ -123,6 +135,11 @@
                 elm.addEventListener(mousewheelevt, displaywheel, false);
         }
 
+        function getTodayJulianDate() {
+            var today = new Date();
+            return gregorianToJd(today.getFullYear(), today.getMonth() + 1, today.getDate());
+        }
+
         function renderDayView(opts) {
             currentView = 0;
             $(container).empty().addClass("ui-vestadp-container");
@@ -173,6 +190,7 @@
                     case "date":
                         calendar.setMonth(parseInt(args["month"]));
                         calendar.setDay(parseInt(args["day"]));
+                        selectedJulianDay = calendar.getJulianDay();
                         var dateStr = calendar.toString(dateFormat);
                         opts.dateChanged(element, dateStr, calendar);
                         if (typeof (element) !== "undefined" && !opts.showInline) {
@@ -208,8 +226,8 @@
                 container.slideUp("fast");
             }));
             footer.append($("<div></div>").addClass("ui-vestadp-clear").text(opts.regional[opts.language].clear).click(function () {
-                elm.val("");
-                container.slideUp("fast");
+                container.slideUp("fast");                
+                that.setDate(null, false, true);
             }));
             return footer;
         }
@@ -592,7 +610,7 @@
             */
             setDate: function (date, cultured) {
                 var vdp = methods._checkThrow(this);
-                return vdp.setDate(date, cultured);
+                return vdp.setDate(date, cultured, true);
             },
             /// checks whethear this element is already datepickerized or not
             _check: function (elm) {
@@ -628,10 +646,10 @@
                 var vdp = new VestaDatePicker(divContainer, $(element), opts);
                 $(element).data("vestadp", vdp);
                 divContainer.hide();
-                vdp.display($(element).val());
+                vdp.display($(element).val(), false);
 
                 $(element).focus(function () {
-                    vdp.display($(this).val());
+                    vdp.display($(this).val(), false);
                     $("div[data-rel='vestadatepicker']").slideUp("fast");
                     var offset = $(this).offset();      
                     var elmWidth = $(this).outerWidth();
@@ -648,7 +666,7 @@
                     
                 })
                 .on('input propertychange paste',function(){
-                    vdp.display($(this).val());
+                    vdp.display($(this).val(), true);
                 })
                 .click(function (ev) {
                     ev.stopPropagation();
