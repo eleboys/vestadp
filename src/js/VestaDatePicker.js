@@ -47,7 +47,7 @@
                 return calendar.toString(dateF);
             } else {
                 var date = jdToGregorian(calendar.getJulianDay());
-                return new Date(date.year, date.month - 1, date.day);
+                return new Date(Date.UTC(date.year, date.month, date.day));
             }
         };
 
