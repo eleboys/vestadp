@@ -71,7 +71,7 @@ $border_color: $main_color_hover;
   }  
 }
 
-.ui-vestadp-title:hover, .ui-vestadp-today:hover, .ui-vestadp-clear:hover {
+.ui-vestadp-title:hover, .ui-vestadp-today-btn:hover, .ui-vestadp-clear:hover {
   background-color: $main_color_hover;
   color: $text_color;
 }
@@ -107,6 +107,18 @@ $border_color: $main_color_hover;
     color: $text_color;
     background-color: $main_color_hover;
   }
+
+  &.ui-vestadp-inactive {
+    color: $text_color_inactive;
+    &:hover{
+        color:$text_color_hover !important;
+    }
+  }
+
+  &.ui-vestadp-today {
+    color: $text_color;
+    background-color: $main_color_hover;
+  }
 }
 
 .ui-vestadp-monthlist > td:hover, .ui-vestadp-yearlist > td:hover {
@@ -119,12 +131,6 @@ $border_color: $main_color_hover;
   background-color: $main_color;
 }
 
-.ui-vestadp-day.ui-vestadp-inactive {
-  color: $text_color_inactive;
-  &:hover{
-      color:$text_color_hover !important;
-  }
-}
 
 .ui-vestadp-monthlist > td, .ui-vestadp-yearlist > td {
   line-height: 4.5em;
@@ -133,7 +139,7 @@ $border_color: $main_color_hover;
   cursor: pointer;
 }
 
-.ui-vestadp-today, .ui-vestadp-clear {
+.ui-vestadp-today-btn, .ui-vestadp-clear {
   display: inline-block;
   line-height: 1.8em;
   text-align: center;

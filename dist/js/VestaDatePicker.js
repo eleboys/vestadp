@@ -52,10 +52,10 @@
         this.setDate = function (date, cultured, raiseChange) {
             if (!date) {
                 selectedJulianDay = 0;
-                calendar.setJulianDay(getTodayJulianDate());                
+                calendar.setJulianDay(getTodayJulianDate());
                 renderDayView(settings);
-                setElementValue("");     
-                if (raiseChange) {         
+                setElementValue("");
+                if (raiseChange) {
                     settings.dateChanged(element, null, calendar);
                 }
                 return;
@@ -155,17 +155,21 @@
             calTable.append(weekHeader);
             var jd = calendar.getJulianDay();
             calendar.goFirstOfMonth();
-            var currentMonth = calendar.month;
-            var firstdow = calendar.getWeekday();
+            var currentMonth = calendar.month,
+            	firstdow = calendar.getWeekday(),
+			    todayJd = getTodayJulianDate();
             calendar.addDay(-1 * firstdow);
             for (i = 0; i < 6; i++) {
                 var wrow = $("<div></div>");
                 for (var j = 0; j < 7; j++) {
-                    var wday = $("<div data-event='click' data-handler='date' data-args='day:" + calendar.day + ",month:" + calendar.month + "'></div>").addClass("ui-vestadp-day").text(getNumber(calendar.day, opts.persianNumbers));
+                    var wday = $("<div data-event='click' data-handler='date' data-args='day:" + calendar.day + ",month:" + calendar.month + "'></div>").addClass("ui-vestadp-day").text(getNumber(calendar.day, opts.persianNumbers)),
+                    cjd = calendar.getJulianDay();
                     if (calendar.month != currentMonth)
                         wday.addClass("ui-vestadp-inactive");
-                    if (calendar.getJulianDay() == selectedJulianDay)
+                    if ( cjd == selectedJulianDay)
                         wday.addClass("ui-vestadp-selected");
+                    if ( cjd == todayJd )
+                        wday.addClass('ui-vestadp-today')
                     wrow.append(wday);
                     calendar.addDay(1);
                 }
@@ -173,8 +177,9 @@
             }
             calendar.setJulianDay(jd);
             $(container).append(calTable);
-            if (opts.showFooter && !opts.showInline)
+            if (opts.showFooter && !opts.showInline){
                 $(container).append(renderFooter(element, opts));
+            }
             calTable.fadeIn();
             $('[data-event="click"]', container).click(function () {
                 var handler = $(this).attr("data-handler");
@@ -220,15 +225,14 @@
 
         function renderFooter(elm, opts) {
             var footer = $('<div></div>').addClass('ui-vestadp-footer');
-            footer.append($("<div></div>").addClass("ui-vestadp-today").text(opts.regional[opts.language].today).click(function () {
-                var today = new Date();
-                var todayJd = gregorianToJd(today.getFullYear(), today.getMonth() + 1, today.getDate());
+            footer.append($("<div></div>").addClass("ui-vestadp-today-btn").text(opts.regional[opts.language].today).click(function () {
+                var todayJd = getTodayJulianDate();
                 calendar.setJulianDay(todayJd);
                 elm.val(calendar.toString(dateFormat));
                 container.slideUp("fast");
             }));
             footer.append($("<div></div>").addClass("ui-vestadp-clear").text(opts.regional[opts.language].clear).click(function () {
-                container.slideUp("fast");                
+                container.slideUp("fast");
                 that.setDate(null, false, true);
             }));
             return footer;
@@ -253,8 +257,9 @@
                 calTable.append(mrow);
             }
             $(container).append(calTable);
-            if (opts.showFooter && !opts.showInline)
+            if (opts.showFooter && !opts.showInline) {
                 $(container).append(renderFooter(element, opts));
+            }
             calTable.fadeIn();
             $('[data-event="click"]', container).click(function () {
                 var handler = $(this).attr("data-handler");
@@ -304,8 +309,9 @@
                 calTable.append(yrow);
             }
             $(container).append(calTable);
-            if (opts.showFooter && !opts.showInline)
+            if (opts.showFooter && !opts.showInline) {
                 $(container).append(renderFooter(element, opts));
+            }
             calTable.fadeIn();
             $('[data-event="click"]', container).click(function () {
                 var handler = $(this).attr("data-handler");
@@ -585,7 +591,7 @@
                 clear: "واضح",
                 previous: "سابق",
                 next: "التالی"
-            }            
+            }
         },
         language: 'fa',
         calendar: "persian", // [gregorian & persian] are available.
@@ -615,10 +621,10 @@
             formatDate: function (date, dateFormat) {
                 var vdp = methods._checkThrow(this);
                 return vdp.formatDate(date, dateFormat);
-            },            
+            },
             /*
-                Selected date of date picker, 
-                (1)cultured: if cultured is true it returns selected date 
+                Selected date of date picker,
+                (1)cultured: if cultured is true it returns selected date
                 in according to selected calendar and dateFormat, if not it returns a normal
                 javascript Date object which is gregorian in default system culture
                 (2)dateFormat: if cultured is set this will be used as formatting string
@@ -675,7 +681,7 @@
                 $(element).focus(function () {
                     vdp.display($(this).val(), false);
                     $("div[data-rel='vestadatepicker']").slideUp("fast");
-                    var offset = $(this).offset();      
+                    var offset = $(this).offset();
                     var elmWidth = $(this).outerWidth();
                     if (opts.direction=="rtl")
                         left = offset.left - (divContainer.outerWidth() - $(this).outerWidth()) +"px"
@@ -687,7 +693,7 @@
                         top: offset.top+$(this).outerHeight()+"px",
                         left: left
                     });
-                    
+
                 })
                 .on('input propertychange paste',function(){
                     vdp.display($(this).val(), true);
