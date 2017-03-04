@@ -5,7 +5,7 @@
     vestaDatePicker = function (container, element, options) {
         if (typeof (container) == "undefined")
             return;
-        var settings = options; //$.extend(vestaDatePicker.defaultSettings, options);
+        var settings = $.extend(vestaDatePicker.defaultSettings, options);
         var calendar = new window[settings.calendar + 'Calendar' ]();
         var dateFormat = settings.dateFormat ? settings.dateFormat : calendar.defaultDateFormat;
         var selectedJulianDay = 0;
@@ -35,6 +35,12 @@
         };
 
         this.formatDate = formatDate;
+
+        this.animate = animate;
+
+        this.getOptions = function () {
+            return settings;
+        }
 
         this.getDate = function (cultured, dateF) {
             if (selectedJulianDay == 0){
@@ -202,7 +208,7 @@
                         opts.dateChanged(element, dateStr, calendar);
                         if (typeof (element) !== "undefined" && !opts.showInline) {
                             element.val(dateStr);
-                            container.slideUp("fast");
+                            animate('close');
                         } else if (typeof (element) !== "undefined" && opts.showInline) {
                             $(".ui-vestadp-selected", calTable).removeClass("ui-vestadp-selected");
                             $(this).addClass("ui-vestadp-selected");
@@ -229,10 +235,10 @@
                 var todayJd = getTodayJulianDate();
                 calendar.setJulianDay(todayJd);
                 elm.val(calendar.toString(dateFormat));
-                container.slideUp("fast");
+                animate('close');
             }));
             footer.append($("<div></div>").addClass("ui-vestadp-clear").text(opts.regional[opts.language].clear).click(function () {
-                container.slideUp("fast");
+                animate('close');
                 that.setDate(null, false, true);
             }));
             return footer;
@@ -566,7 +572,18 @@
 
             return { year: year, month: month, day: day };
         }
+
+        function animate(dir) {
+            var cmd = {
+                slide : { open : 'slideDown', close: 'slideUp' },
+                fade : { open : 'fadeIn', close: 'fadeOut' }
+            }
+            $(container)[cmd[settings.animation][dir]]();
+        }
+
     };
+
+
 
     vestaDatePicker.defaultSettings = {
         direction: "rtl",
@@ -596,6 +613,7 @@
         language: 'fa',
         calendar: "persian", // [gregorian & persian] are available.
         dateChanged: function () { },
+        animation: 'fade',
         showInline: false
     };
 
@@ -673,21 +691,22 @@
                 opts.showInline = false;
                 var divContainer = $("<div />").attr("data-rel", "vestadatepicker").css("position", "absolute");
                 divContainer.appendTo("body");
-                var vdp = new VestaDatePicker(divContainer, $(element), opts);
+                var vdp = new VestaDatePicker(divContainer, $(element), opts),
+                    options = vdp.getOptions();
                 $(element).data("vestadp", vdp);
                 divContainer.hide();
                 vdp.display($(element).val(), false);
 
                 $(element).focus(function () {
                     vdp.display($(this).val(), false);
-                    $("div[data-rel='vestadatepicker']").slideUp("fast");
+                    $("div[data-rel='vestadatepicker']").fadeOut("fast");
                     var offset = $(this).offset();
                     var elmWidth = $(this).outerWidth();
-                    if (opts.direction=="rtl")
+                    if (options.direction=="rtl")
                         left = offset.left - (divContainer.outerWidth() - $(this).outerWidth()) +"px"
                     else
                         left = offset.left + "px";
-                    divContainer.slideDown("fast");
+                    vdp.animate('open');
                     divContainer.css({
                         position: "absolute",
                         top: offset.top+$(this).outerHeight()+"px",
@@ -707,7 +726,7 @@
                 });
 
                 $(document).click(function () {
-                    divContainer.slideUp("fast");
+                    vdp.animate('close');
                 });
             }
         };
