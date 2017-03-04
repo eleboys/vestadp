@@ -34,6 +34,8 @@
             return calendar;
         };
 
+        this.formatDate = formatDate;
+
         this.getDate = function (cultured, dateF) {
             if (selectedJulianDay == 0){
                 return null;
@@ -399,6 +401,20 @@
             return a - (b * Math.floor(a / b));
         };
 
+
+        /**
+        * Formats the input Javascript Date object to given format string or current datepicker format
+        * @param {Date} date Input javascript Date object
+        * @param {string} dateF Date format string
+        */
+        function formatDate(date, dateF) {
+            dateF = typeof(dateF) !== "undefined" ? dateF : dateFormat;
+            var dateJd = gregorianToJd(date.getFullYear(), date.getMonth() + 1, date.getDate());
+            var cal = new window[settings.calendar + 'Calendar' ]();
+            cal.setJulianDay(dateJd);
+            return cal.toString(dateF);
+        }
+
         function parseDate(format, value) {
             if (format == null || value == null) {
                 throw "Invalid arguments";
@@ -592,6 +608,13 @@
                         methods._renderInline(element, opts);
                 });
             },
+            /**
+             * Format javascript date object to desigred dateFormat string
+             */
+            formatDate: function (date, dateFormat) {
+                var vdp = methods._checkThrow(this);
+                return vdp.formatDate(date, dateFormat);
+            },            
             /*
                 Selected date of date picker, 
                 (1)cultured: if cultured is true it returns selected date 
