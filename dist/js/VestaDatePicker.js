@@ -408,6 +408,7 @@
         * @param {string} dateF Date format string
         */
         function formatDate(date, dateF) {
+            if (!(date instanceof Date)) return null;
             dateF = typeof(dateF) !== "undefined" ? dateF : dateFormat;
             var dateJd = gregorianToJd(date.getFullYear(), date.getMonth() + 1, date.getDate());
             var cal = new window[settings.calendar + 'Calendar' ]();
