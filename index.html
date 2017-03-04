@@ -4,7 +4,10 @@
     <title>Test VestaDatePicker</title>
     <meta charset="utf-8">
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="dist/js/VestaDatePicker.full.min.js"></script>
+    <script src="src/js/VestaDatePicker.js"></script>
+    <script src="src/js/VestaDatePicker.gregorian.js"></script>
+    <script src="src/js/VestaDatePicker.hijri.js"></script>
+    <script src="src/js/VestaDatePicker.persian.js"></script>
     <link href="dist/css/VestaDatePicker.css" type="text/css" rel="stylesheet" />
     <style>
         body {
@@ -13,11 +16,15 @@
     </style>
     <script>
         $(function () {
+            var today = new Date(),
+                nextWeek = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()+6));
             $("#dpEn").vestadp({
                dateFormat : "D dd M yy",
                direction: "ltr",
                showFooter: false,
                persianNumbers: false,
+               minDate: null,
+               maxDate: nextWeek,
                language: 'en',
                calendar: "gregorian"
             });

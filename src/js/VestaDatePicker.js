@@ -5,13 +5,15 @@
     vestaDatePicker = function (container, element, options) {
         if (typeof (container) == "undefined")
             return;
-        var settings = $.extend(vestaDatePicker.defaultSettings, options);
-        var calendar = new window[settings.calendar + 'Calendar' ]();
-        var dateFormat = settings.dateFormat ? settings.dateFormat : calendar.defaultDateFormat;
-        var selectedJulianDay = 0;
-        var currentView = 0; // 0 = dayView; 1 = month view; 2 = year view
-        var startYear, endYear;
-        var that = this;
+        var settings = $.extend({}, vestaDatePicker.defaultSettings, options),
+            calendar = new window[settings.calendar + 'Calendar' ](),
+            dateFormat = settings.dateFormat ? settings.dateFormat : calendar.defaultDateFormat,
+            selectedJulianDay = 0,
+            currentView = 0, // 0 = dayView; 1 = month view; 2 = year view
+            startYear, endYear,
+            minDateJd = dateToGregorianJd(settings.minDate),
+            maxDateJd = dateToGregorianJd(settings.maxDate),
+            that = this;
         mouseWheelBinder(container);
 
         this.display = function (strDate, raiseChange) {
@@ -40,6 +42,24 @@
 
         this.getOptions = function () {
             return settings;
+        }
+
+        this.minDate = function (mdate) {
+            if (typeof(mdate)==='undefined') {
+                return settings.minDate;
+            }
+            settings.minDate = mdate;
+            minDateJd = dateToGregorianJd(settings.minDate);
+            renderDayView(settings);
+        }
+
+        this.maxDate = function (mdate) {
+            if (typeof(mdate)==='undefined') {
+                return settings.maxDate;
+            }            
+            settings.maxDate = mdate;
+            maxDateJd = dateToGregorianJd(settings.maxDate),
+            renderDayView(settings);
         }
 
         this.getDate = function (cultured, dateF) {
@@ -76,8 +96,13 @@
                 selectedJulianDay = calendar.getJulianDay();
             } else {
                 selectedJulianDay = gregorianToJd(date.year, date.month, date.day);
-                calendar.setJulianDay(selectedJulianDay);
             }
+            if (selectedJulianDay<minDateJd) {
+                selectedJulianDay = minDateJd;
+            } else if (selectedJulianDay>maxDateJd){
+                selectedJulianDay = maxDateJd;
+            }
+            calendar.setJulianDay(selectedJulianDay);            
             var dateStr = calendar.toString(dateFormat);
             if (raiseChange) {
                 settings.dateChanged(element, dateStr, calendar);
@@ -145,7 +170,13 @@
 
         function getTodayJulianDate() {
             var today = new Date();
-            return gregorianToJd(today.getFullYear(), today.getMonth() + 1, today.getDate());
+            return dateToGregorianJd(today);
+        }
+        
+        function dateToGregorianJd(date) {
+            if (!date) return null;
+            if (typeof(date)==='string') date = new Date(date);
+            return gregorianToJd(date.getFullYear(), date.getMonth() + 1, date.getDate());
         }
 
         function renderDayView(opts) {
@@ -164,6 +195,7 @@
             var currentMonth = calendar.month,
             	firstdow = calendar.getWeekday(),
 			    todayJd = getTodayJulianDate();
+
             calendar.addDay(-1 * firstdow);
             for (i = 0; i < 6; i++) {
                 var wrow = $("<div></div>");
@@ -174,8 +206,10 @@
                         wday.addClass("ui-vestadp-inactive");
                     if ( cjd == selectedJulianDay)
                         wday.addClass("ui-vestadp-selected");
-                    if ( cjd == todayJd )
-                        wday.addClass('ui-vestadp-today')
+                    if ( cjd == todayJd && (todayJd>=minDateJd && (!maxDateJd || maxDateJd>=todayJd)))
+                        wday.addClass('ui-vestadp-today');
+                    if ((minDateJd && minDateJd > cjd) || (maxDateJd && maxDateJd < cjd))
+                        wday.attr('disabled', 'disabled');
                     wrow.append(wday);
                     calendar.addDay(1);
                 }
@@ -188,6 +222,7 @@
             }
             calTable.fadeIn();
             $('[data-event="click"]', container).click(function () {
+                if ($(this).attr('disabled')) return;
                 var handler = $(this).attr("data-handler");
                 var args = parseArgs($(this).attr("data-args"));
                 switch (handler) {
@@ -422,7 +457,7 @@
         function formatDate(date, dateF) {
             if (!(date instanceof Date)) return null;
             dateF = typeof(dateF) !== "undefined" ? dateF : dateFormat;
-            var dateJd = gregorianToJd(date.getFullYear(), date.getMonth() + 1, date.getDate());
+            var dateJd = dateToGregorianJd(date);
             var cal = new window[settings.calendar + 'Calendar' ]();
             cal.setJulianDay(dateJd);
             return cal.toString(dateF);
@@ -611,8 +646,10 @@
             }
         },
         language: 'fa',
-        calendar: "persian", // [gregorian & persian] are available.
+        calendar: "persian", // [gregorian & persian & hijri] are available.
         dateChanged: function () { },
+        minDate: null,
+        maxDate: null,
         animation: 'fade',
         showInline: false
     };
@@ -632,6 +669,14 @@
                     else
                         methods._renderInline(element, opts);
                 });
+            },
+            minDate: function (value) {
+                var vdp = methods._checkThrow(this);
+                return vdp.minDate(value);
+            },
+            maxDate: function (value) {
+                var vdp = methods._checkThrow(this);
+                return vdp.maxDate(value);
             },
             /**
              * Format javascript date object to desigred dateFormat string

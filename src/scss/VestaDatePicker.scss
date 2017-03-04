@@ -1,6 +1,7 @@
 $main_color: #1D508D;
 $main_color_hover: lighten($main_color, 10%);
 $text_color_inactive:  lighten($main_color, 30%);
+$text_color_disabled: silver;
 $text_color: #fff;
 $text_color_hover: #fff;
 $background_color: #fff;
@@ -111,13 +112,21 @@ $border_color: $main_color_hover;
   &.ui-vestadp-inactive {
     color: $text_color_inactive;
     &:hover{
-        color:$text_color_hover !important;
+        color:$text_color_hover;
     }
   }
 
   &.ui-vestadp-today {
     color: $text_color;
     background-color: $main_color_hover;
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
+    color: $text_color_disabled !important;
+    &:hover {
+      background-color: $background_color;
+    }
   }
 }
 
