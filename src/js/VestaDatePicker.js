@@ -2,8 +2,8 @@
 /* Vesta Date Picker */
 (function () {
     var vestaDatePicker;
-    vestaDatePicker = function (container, element, options) {
-        if (typeof (container) == "undefined")
+    vestaDatePicker = function (mainContainer, element, options) {
+        if (typeof (mainContainer) == "undefined")
             return;
         var settings = $.extend({}, vestaDatePicker.defaultSettings, options),
             calendar = new window[settings.calendar + 'Calendar' ](),
@@ -13,8 +13,79 @@
             startYear, endYear,
             minDateJd = dateToGregorianJd(settings.minDate),
             maxDateJd = dateToGregorianJd(settings.maxDate),
+            container = $('<div></div>'),
             that = this;
+        mainContainer.append(container);
+        bindClicks();
         mouseWheelBinder(container);
+
+        var clickHandlers = [
+            {
+                "next": function () {  calendar.addMonth(1); return true;   },
+                "prev": function () {  calendar.addMonth(-1); return true;   },
+                "view": function () {  renderMonth(settings); return false; },
+                "date": function (args) {
+                    calendar.setMonth(parseInt(args["month"]));
+                    calendar.setDay(parseInt(args["day"]));
+                    selectedJulianDay = calendar.getJulianDay();
+                    var dateStr = calendar.toString(dateFormat);
+                    settings.dateChanged(element, dateStr, calendar);
+                    if (typeof (element) !== "undefined" && !settings.showInline) {
+                        element.val(dateStr);
+                        animate('close');
+                    } else if (typeof (element) !== "undefined" && settings.showInline) {
+                        $(".ui-vestadp-selected", container).removeClass("ui-vestadp-selected");
+                        $(this).addClass("ui-vestadp-selected");
+                    }     
+                    return false;               
+                },
+                "after": function () {
+                    $('.ui-vestadp-calendar', container).fadeOut("fast", function () {
+                        renderDayView(settings);
+                    });
+                }
+            },
+            {
+                "next": function () { calendar.addYear(1); return true; },
+                "prev": function () { calendar.addYear(-1); return true; },
+                "view": function (args) { 
+                    if (args["view"] == "cal") {
+                        calendar.setMonth(parseInt(args["month"]));
+                        renderDayView(settings);
+                        return;
+                    } else if (args["view"] == "year")
+                        renderYear(settings, calendar.year);
+                    return false;             
+                 },
+                 "after": function (args) {
+                    $('.ui-vestadp-calendar', container).fadeOut("fast", function () {
+                        renderMonth(settings);
+                    });
+                 }
+            }, 
+            {
+                "next": function () {
+                    $('.ui-vestadp-calendar', container).fadeOut("fast", function () {
+                        renderYear(settings, endYear + 4);
+                    });
+                },
+                "prev": function () {
+                    $('.ui-vestadp-calendar', container).fadeOut("fast", function () {
+                        renderYear(settings, startYear - 7);
+                    });
+                },
+                "view": function (args) {
+                    if (args["view"] == "month") {
+                        calendar.setYear(parseInt(args["year"]));
+                        $('.ui-vestadp-calendar', container).fadeOut("fast", function () {
+                            renderMonth(settings);
+                        });
+                        return;
+                    }                    
+                },
+                "after": function () {  }
+            }
+        ];
 
         this.display = function (strDate, raiseChange) {
             if (typeof (strDate) === "undefined" || !strDate) {
@@ -231,39 +302,19 @@
                 $(container).append(renderFooter(element, opts));
             }
             calTable.fadeIn();
-            $('[data-event="click"]', container).click(function () {
+        }
+
+        function bindClicks() {
+            $(container).on('click','[data-event="click"]',function () {
                 if ($(this).attr('disabled')) return;
                 var handler = $(this).attr("data-handler");
                 var args = parseArgs($(this).attr("data-args"));
-                switch (handler) {
-                    case "next":
-                        calendar.addMonth(1);
-                        break;
-                    case "prev":
-                        calendar.addMonth(-1);
-                        break;
-                    case "view":
-                        renderMonth(opts);
-                        return;
-                    case "date":
-                        calendar.setMonth(parseInt(args["month"]));
-                        calendar.setDay(parseInt(args["day"]));
-                        selectedJulianDay = calendar.getJulianDay();
-                        var dateStr = calendar.toString(dateFormat);
-                        opts.dateChanged(element, dateStr, calendar);
-                        if (typeof (element) !== "undefined" && !opts.showInline) {
-                            element.val(dateStr);
-                            animate('close');
-                        } else if (typeof (element) !== "undefined" && opts.showInline) {
-                            $(".ui-vestadp-selected", calTable).removeClass("ui-vestadp-selected");
-                            $(this).addClass("ui-vestadp-selected");
-                        }
-                        return;
+                console.log(currentView, handler, args);
+                var runAfter = clickHandlers[currentView][handler].call(this,args);
+                if (runAfter) {
+                    clickHandlers[currentView]["after"].call(this,args);
                 }
-                calTable.fadeOut("fast", function () {
-                    renderDayView(opts);
-                });
-            });
+            });            
         }
 
         function renderHeader(title, args, opts) {
@@ -310,30 +361,8 @@
                 $(container).append(renderFooter(element, opts));
             }
             calTable.fadeIn();
-            $('[data-event="click"]', container).click(function () {
-                var handler = $(this).attr("data-handler");
-                var args = parseArgs($(this).attr("data-args"));
-                switch (handler) {
-                    case "next":
-                        calendar.addYear(1);
-                        break;
-                    case "prev":
-                        calendar.addYear(-1);
-                        break;
-                    case "view":
-                        if (args["view"] == "cal") {
-                            calendar.setMonth(parseInt(args["month"]));
-                            renderDayView(opts);
-                            return;
-                        } else if (args["view"] == "year")
-                            renderYear(opts, calendar.year);
-                        return;
-                }
-                calTable.fadeOut("fast", function () {
-                    renderMonth(opts);
-                });
-            });
         }
+
 
         function renderYear(opts, year) {
             currentView = 2;
@@ -362,31 +391,8 @@
                 $(container).append(renderFooter(element, opts));
             }
             calTable.fadeIn();
-            $('[data-event="click"]', container).click(function () {
-                var handler = $(this).attr("data-handler");
-                var args = parseArgs($(this).attr("data-args"));
-                switch (handler) {
-                    case "next":
-                        calTable.fadeOut("fast", function () {
-                            renderYear(opts, endYear + 4);
-                        });
-                        return;
-                    case "prev":
-                        calTable.fadeOut("fast", function () {
-                            renderYear(opts, startYear - 7);
-                        });
-                        return;
-                    case "view":
-                        if (args["view"] == "month") {
-                            calendar.setYear(parseInt(args["year"]));
-                            calTable.fadeOut("fast", function () {
-                                renderMonth(opts);
-                            });
-                            return;
-                        }
-                }
-            });
         }
+        
 
         // to parse argument lists passed to clickable objects
         function parseArgs(args) {
@@ -469,6 +475,14 @@
             var cal = new window[settings.calendar + 'Calendar' ]();
             cal.setJulianDay(dateJd);
             return cal.toString(dateF);
+        }
+            
+        function animate(dir) {
+            var cmd = {
+                slide : { open : 'slideDown', close: 'slideUp' },
+                fade : { open : 'fadeIn', close: 'fadeOut' }
+            }
+            $(mainContainer)[cmd[settings.animation][dir]]();
         }
 
         function parseDate(format, value) {
@@ -615,15 +629,6 @@
 
             return { year: year, month: month, day: day };
         }
-
-        function animate(dir) {
-            var cmd = {
-                slide : { open : 'slideDown', close: 'slideUp' },
-                fade : { open : 'fadeIn', close: 'fadeOut' }
-            }
-            $(container)[cmd[settings.animation][dir]]();
-        }
-
     };
 
 
