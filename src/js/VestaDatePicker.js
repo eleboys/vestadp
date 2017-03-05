@@ -99,7 +99,7 @@
             }
             if (selectedJulianDay<minDateJd) {
                 selectedJulianDay = minDateJd;
-            } else if (selectedJulianDay>maxDateJd){
+            } else if (maxDateJd && selectedJulianDay>maxDateJd){
                 selectedJulianDay = maxDateJd;
             }
             calendar.setJulianDay(selectedJulianDay);            

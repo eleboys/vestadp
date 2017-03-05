@@ -5,18 +5,15 @@
     vestaDatePicker = function (container, element, options) {
         if (typeof (container) == "undefined")
             return;
-        var settings = $.extend(vestaDatePicker.defaultSettings, options),
+        var settings = $.extend({}, vestaDatePicker.defaultSettings, options),
             calendar = new window[settings.calendar + 'Calendar' ](),
             dateFormat = settings.dateFormat ? settings.dateFormat : calendar.defaultDateFormat,
             selectedJulianDay = 0,
             currentView = 0, // 0 = dayView; 1 = month view; 2 = year view
             startYear, endYear,
-            startDateJd = dateToGregorianJd(settings.startDate),
-            endDateJd = dateToGregorianJd(settings.endDate);
+            minDateJd = dateToGregorianJd(settings.minDate),
+            maxDateJd = dateToGregorianJd(settings.maxDate),
             that = this;
-        
-        debugger;
-
         mouseWheelBinder(container);
 
         this.display = function (strDate, raiseChange) {
@@ -45,6 +42,24 @@
 
         this.getOptions = function () {
             return settings;
+        }
+
+        this.minDate = function (mdate) {
+            if (typeof(mdate)==='undefined') {
+                return settings.minDate;
+            }
+            settings.minDate = mdate;
+            minDateJd = dateToGregorianJd(settings.minDate);
+            renderDayView(settings);
+        }
+
+        this.maxDate = function (mdate) {
+            if (typeof(mdate)==='undefined') {
+                return settings.maxDate;
+            }            
+            settings.maxDate = mdate;
+            maxDateJd = dateToGregorianJd(settings.maxDate),
+            renderDayView(settings);
         }
 
         this.getDate = function (cultured, dateF) {
@@ -81,8 +96,13 @@
                 selectedJulianDay = calendar.getJulianDay();
             } else {
                 selectedJulianDay = gregorianToJd(date.year, date.month, date.day);
-                calendar.setJulianDay(selectedJulianDay);
             }
+            if (selectedJulianDay<minDateJd) {
+                selectedJulianDay = minDateJd;
+            } else if (maxDateJd && selectedJulianDay>maxDateJd){
+                selectedJulianDay = maxDateJd;
+            }
+            calendar.setJulianDay(selectedJulianDay);            
             var dateStr = calendar.toString(dateFormat);
             if (raiseChange) {
                 settings.dateChanged(element, dateStr, calendar);
@@ -186,9 +206,9 @@
                         wday.addClass("ui-vestadp-inactive");
                     if ( cjd == selectedJulianDay)
                         wday.addClass("ui-vestadp-selected");
-                    if ( cjd == todayJd )
+                    if ( cjd == todayJd && (todayJd>=minDateJd && (!maxDateJd || maxDateJd>=todayJd)))
                         wday.addClass('ui-vestadp-today');
-                    if ((startDateJd && startDateJd > cjd) || (endDateJd && endDateJd < cjd))
+                    if ((minDateJd && minDateJd > cjd) || (maxDateJd && maxDateJd < cjd))
                         wday.attr('disabled', 'disabled');
                     wrow.append(wday);
                     calendar.addDay(1);
@@ -626,10 +646,10 @@
             }
         },
         language: 'fa',
-        calendar: "persian", // [gregorian & persian] are available.
+        calendar: "persian", // [gregorian & persian & hijri] are available.
         dateChanged: function () { },
-        startDate: null,
-        endDate: null,
+        minDate: null,
+        maxDate: null,
         animation: 'fade',
         showInline: false
     };
@@ -649,6 +669,14 @@
                     else
                         methods._renderInline(element, opts);
                 });
+            },
+            minDate: function (value) {
+                var vdp = methods._checkThrow(this);
+                return vdp.minDate(value);
+            },
+            maxDate: function (value) {
+                var vdp = methods._checkThrow(this);
+                return vdp.maxDate(value);
             },
             /**
              * Format javascript date object to desigred dateFormat string
