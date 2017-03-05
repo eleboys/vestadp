@@ -277,14 +277,12 @@
         function renderFooter(elm, opts) {
             var footer = $('<div></div>').addClass('ui-vestadp-footer');
             footer.append($("<div></div>").addClass("ui-vestadp-today-btn").text(opts.regional[opts.language].today).click(function () {
-                var todayJd = getTodayJulianDate();
-                calendar.setJulianDay(todayJd);
-                elm.val(calendar.toString(dateFormat));
+                setCalendarJulianDay(getTodayJulianDate());
                 animate('close');
             }));
             footer.append($("<div></div>").addClass("ui-vestadp-clear").text(opts.regional[opts.language].clear).click(function () {
+                setCalendarJulianDay(0, true);
                 animate('close');
-                that.setDate(null, false, true);
             }));
             return footer;
         }
