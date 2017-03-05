@@ -50,6 +50,9 @@
             }
             settings.minDate = mdate;
             minDateJd = dateToGregorianJd(settings.minDate);
+            if (selectedJulianDay < minDateJd) {
+                setCalendarJulianDay(minDateJd, true);
+            }
             renderDayView(settings);
         }
 
@@ -58,7 +61,10 @@
                 return settings.maxDate;
             }            
             settings.maxDate = mdate;
-            maxDateJd = dateToGregorianJd(settings.maxDate),
+            maxDateJd = dateToGregorianJd(settings.maxDate);
+            if (selectedJulianDay > maxDateJd) {
+                setCalendarJulianDay(maxDateJd, true);
+            }
             renderDayView(settings);
         }
 
@@ -77,13 +83,7 @@
 
         this.setDate = function (date, cultured, raiseChange) {
             if (!date) {
-                selectedJulianDay = 0;
-                calendar.setJulianDay(getTodayJulianDate());
-                renderDayView(settings);
-                setElementValue("");
-                if (raiseChange) {
-                    settings.dateChanged(element, null, calendar);
-                }
+                setCalendarJulianDay(0, raiseChange);
                 return;
             }
             if ((!date.hasOwnProperty("year") && !date.hasOwnProperty("month") && !date.hasOwnProperty("day")))
@@ -97,19 +97,25 @@
             } else {
                 selectedJulianDay = gregorianToJd(date.year, date.month, date.day);
             }
-            if (selectedJulianDay<minDateJd) {
-                selectedJulianDay = minDateJd;
-            } else if (maxDateJd && selectedJulianDay>maxDateJd){
-                selectedJulianDay = maxDateJd;
+            setCalendarJulianDay(selectedJulianDay, raiseChange);
+        };
+
+
+        function setCalendarJulianDay(jd, raiseChange) {
+            if (jd<minDateJd) {
+                jd = minDateJd;
+            } else if (maxDateJd && jd>maxDateJd){
+                jd = maxDateJd;
             }
-            calendar.setJulianDay(selectedJulianDay);            
-            var dateStr = calendar.toString(dateFormat);
+            selectedJulianDay = jd;
+            calendar.setJulianDay(jd>0 ? jd:getTodayJulianDate());
+            var dateStr = jd>0 ? calendar.toString(dateFormat): null;
+            setElementValue(dateStr);
             if (raiseChange) {
                 settings.dateChanged(element, dateStr, calendar);
-            }
-            setElementValue(dateStr);
+            }            
             renderDayView(settings);
-        };
+        }
 
         function setElementValue(val) {
             if (typeof (element) !== "undefined") {
@@ -198,10 +204,14 @@
 
             calendar.addDay(-1 * firstdow);
             for (i = 0; i < 6; i++) {
-                var wrow = $("<div></div>");
+                var wrow = $("<div></div>"),
+                    cjd, wday;
                 for (var j = 0; j < 7; j++) {
-                    var wday = $("<div data-event='click' data-handler='date' data-args='day:" + calendar.day + ",month:" + calendar.month + "'></div>").addClass("ui-vestadp-day").text(getNumber(calendar.day, opts.persianNumbers)),
                     cjd = calendar.getJulianDay();
+                    wday = $("<div data-event='click' data-handler='date'></div>")
+                                .attr('data-args',"day:" + calendar.day + ",month:" + calendar.month + ",jd:"+cjd)
+                                .addClass("ui-vestadp-day").text(getNumber(calendar.day, opts.persianNumbers));
+                    
                     if (calendar.month != currentMonth)
                         wday.addClass("ui-vestadp-inactive");
                     if ( cjd == selectedJulianDay)
