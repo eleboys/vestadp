@@ -309,7 +309,6 @@
                 if ($(this).attr('disabled')) return;
                 var handler = $(this).attr("data-handler");
                 var args = parseArgs($(this).attr("data-args"));
-                console.log(currentView, handler, args);
                 var runAfter = clickHandlers[currentView][handler].call(this,args);
                 if (runAfter) {
                     clickHandlers[currentView]["after"].call(this,args);
