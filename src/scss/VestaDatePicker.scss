@@ -22,7 +22,7 @@ $screen-xs: 480px !default;
     background-color: $background_color;
 
     @include breakpoint(0 $screen-xs) {
-      position: relative;
+      position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
