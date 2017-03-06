@@ -15,7 +15,8 @@
             maxDateJd = dateToGregorianJd(settings.maxDate),
             container = $('<div></div>'),
             that = this;
-        mainContainer.append(container);
+        mainContainer.append(container).addClass('ui-vestadp-maincontainer')
+                     .addClass(settings.showInline ? 'ui-vestadp-inline' : 'ui-vestadp-popup');
         bindClicks();
         mouseWheelBinder(container);
 
