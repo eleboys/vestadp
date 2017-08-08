@@ -9,12 +9,17 @@ $header_height: 35px;
 $header_font_size: 15pt;
 $border_color: $main_color_hover;
 
+.ui-vestadp-popup{
+  z-index:3000;
+}
  
 .ui-vestadp-container {
+  
   padding: 2px;
-  width: 17em;
+  width: 250px;
+  z-index: 3000;
   border: solid 1px $border_color;
-  font-family: tahoma;
+  font-family: Verdana, Tahoma, sans-serif;
   background-color: $background_color;
   tbody, td {
     padding: 0px;

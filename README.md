@@ -60,6 +60,44 @@ bower install vestadp --save
     });
 ```
 
+Default Options
+-------------
+```javascript
+{
+    direction: "rtl",
+    dateFormat: "", // default dateFromat of each calendar
+    showFooter: true,
+    persianNumbers: true,
+    regional: {
+        "fa": {
+            today: "امروز",
+            clear: "پاکن",
+            previous: "قبلی",
+            next: "بعدی"
+        },
+        "en": {
+            today: "Today",
+            clear: "Clear",
+            previous: "Previous",
+            next: "Next"
+        },
+        "ar": {
+            today: "الیوم",
+            clear: "واضح",
+            previous: "سابق",
+            next: "التالی"
+        }
+    },
+    language: 'fa',
+    calendar: "persian", // [gregorian & persian & hijri] are available.
+    dateChanged: function () { },
+    minDate: null,
+    maxDate: null,
+    animation: 'fade',
+    showInline: false
+}
+```
+
 Links
 -------
 
