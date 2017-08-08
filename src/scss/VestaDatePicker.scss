@@ -1,6 +1,9 @@
+@import "bower_components/compass-mixins/lib/compass";
+@import "bower_components/breakpoint-sass/stylesheets/breakpoint";
+
 $main_color: #1D508D;
 $main_color_hover: lighten($main_color, 10%);
-$text_color_inactive:  lighten($main_color, 30%);
+$text_color_inactive : lighten($main_color, 30%);
 $text_color_disabled: silver;
 $text_color: #fff;
 $text_color_hover: #fff;
@@ -8,35 +11,52 @@ $background_color: #fff;
 $header_height: 35px;
 $header_font_size: 15pt;
 $border_color: $main_color_hover;
+$screen-xs: 480px !default;
 
-.ui-vestadp-popup{
-  z-index:3000;
-}
- 
-.ui-vestadp-container {
-  
-  padding: 2px;
-  width: 250px;
-  z-index: 3000;
-  border: solid 1px $border_color;
-  font-family: Verdana, Tahoma, sans-serif;
-  background-color: $background_color;
-  tbody, td {
-    padding: 0px;
-    margin: 0px;
+.ui-vestadp-maincontainer {
+  .ui-vestadp-container {
+    padding: 2px;
+    width: 250px;
+    border: solid 1px $border_color;
+    font-family: tahoma;
+    background-color: $background_color;
+
+    @include breakpoint(0 $screen-xs) {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    tbody, td {
+      padding: 0px;
+      margin: 0px;
+    }
   }
+
+  &.ui-vestadp-popup {
+    z-index:3000;
+		@include breakpoint(0 $screen-xs) {
+			position: fixed !important;
+			top: 0 !important;
+			left: 0 !important;
+			width: 100%;
+			bottom: 0;
+			background-color: rgba(0,0,0,0.7);
+		}
+	}
+
 }
 
-.ui-vestadp-header, .ui-vestadp-footer {
+.ui-vestadp-header,
+.ui-vestadp-footer {
   position: relative;
   background-color: $main_color;
-  color:$text_color;
+  color: $text_color;
   width: 100%;
 }
 
-
-
-.ui-vestadp-header{
+.ui-vestadp-header {
   font-size: $header_font_size;
   .ui-vestadp-title {
     height: $header_height;
@@ -48,7 +68,7 @@ $border_color: $main_color_hover;
   }
   .ui-vestadp-prev {
     cursor: pointer;
-    height: $header_height;    
+    height: $header_height;
     left: 0;
     position: absolute;
     text-align: center;
@@ -62,7 +82,7 @@ $border_color: $main_color_hover;
   }
   .ui-vestadp-next {
     cursor: pointer;
-    height: $header_height;  
+    height: $header_height;
     position: absolute;
     right: 0;
     text-align: center;
@@ -70,18 +90,19 @@ $border_color: $main_color_hover;
     width: 30px;
     font-weight: bold;
     padding-top: 5px;
-    &:hover{
-        background-color: $main_color_hover;
-        color: $text_color;
+    &:hover {
+      background-color: $main_color_hover;
+      color: $text_color;
     }
-  }  
+  }
 }
 
-.ui-vestadp-title:hover, .ui-vestadp-today-btn:hover, .ui-vestadp-clear:hover {
+.ui-vestadp-title:hover,
+.ui-vestadp-today-btn:hover,
+.ui-vestadp-clear:hover {
   background-color: $main_color_hover;
   color: $text_color;
 }
-
 
 .ui-vestadp-calendar {
   width: 100%;
@@ -89,43 +110,40 @@ $border_color: $main_color_hover;
 }
 
 .ui-vestadp-weekheader {
-    margin-top:5px;
-    margin-bottom: 5px;
-    border-bottom: solid 1px lighten($main_color, 50%);
-    .ui-vestadp-weekday {
-        font-weight: bold;
-        text-align: center;
-        padding: 5px 0 5px 0;
-        display: inline-block;
-        width: 13.4%;
-        margin: 1px;
-    }
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-bottom: solid 1px lighten($main_color, 50%);
+  .ui-vestadp-weekday {
+    font-weight: bold;
+    text-align: center;
+    padding: 5px 0 5px 0;
+    display: inline-block;
+    width: 13.4%;
+    margin: 1px;
+  }
 }
 
 .ui-vestadp-day {
   text-align: center;
   line-height: 1.6em;
   cursor: pointer;
-    display: inline-block;
-    width: 13.4%;
-    margin: 1px;      
+  display: inline-block;
+  width: 13.4%;
+  margin: 1px;
   &:hover {
     color: $text_color;
     background-color: $main_color_hover;
   }
-
   &.ui-vestadp-inactive {
     color: $text_color_inactive;
-    &:hover{
-        color:$text_color_hover;
+    &:hover {
+      color: $text_color_hover;
     }
   }
-
   &.ui-vestadp-today {
     color: $text_color;
     background-color: $main_color_hover;
   }
-
   &[disabled] {
     cursor: not-allowed;
     color: $text_color_disabled !important;
@@ -135,25 +153,29 @@ $border_color: $main_color_hover;
   }
 }
 
-.ui-vestadp-monthlist > td:hover, .ui-vestadp-yearlist > td:hover {
+.ui-vestadp-monthlist>td:hover,
+.ui-vestadp-yearlist>td:hover {
   color: $text_color;
   background-color: $main_color_hover;
 }
 
-.ui-vestadp-day.ui-vestadp-selected, .ui-vestadp-monthlist > td.ui-vestadp-selected, .ui-vestadp-yearlist > td.ui-vestadp-selected {
+.ui-vestadp-day.ui-vestadp-selected,
+.ui-vestadp-monthlist>td.ui-vestadp-selected,
+.ui-vestadp-yearlist>td.ui-vestadp-selected {
   color: $text_color;
   background-color: $main_color;
 }
 
-
-.ui-vestadp-monthlist > td, .ui-vestadp-yearlist > td {
+.ui-vestadp-monthlist>td,
+.ui-vestadp-yearlist>td {
   line-height: 4.5em;
   text-align: center;
   width: 25%;
   cursor: pointer;
 }
 
-.ui-vestadp-today-btn, .ui-vestadp-clear {
+.ui-vestadp-today-btn,
+.ui-vestadp-clear {
   display: inline-block;
   line-height: 1.8em;
   text-align: center;

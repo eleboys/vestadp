@@ -2,8 +2,8 @@
 /* Vesta Date Picker */
 (function () {
     var vestaDatePicker;
-    vestaDatePicker = function (container, element, options) {
-        if (typeof (container) == "undefined")
+    vestaDatePicker = function (mainContainer, element, options) {
+        if (typeof (mainContainer) == "undefined")
             return;
         var settings = $.extend({}, vestaDatePicker.defaultSettings, options),
             calendar = new window[settings.calendar + 'Calendar' ](),
@@ -13,8 +13,80 @@
             startYear, endYear,
             minDateJd = dateToGregorianJd(settings.minDate),
             maxDateJd = dateToGregorianJd(settings.maxDate),
+            container = $('<div></div>'),
             that = this;
+        mainContainer.append(container).addClass('ui-vestadp-maincontainer')
+                     .addClass(settings.showInline ? 'ui-vestadp-inline' : 'ui-vestadp-popup');
+        bindEventHandlers();
         mouseWheelBinder(container);
+
+        var clickHandlers = [
+            {
+                "next": function () {  calendar.addMonth(1); return true;   },
+                "prev": function () {  calendar.addMonth(-1); return true;   },
+                "view": function () {  renderMonth(settings); return false; },
+                "date": function (args) {
+                    calendar.setMonth(parseInt(args["month"]));
+                    calendar.setDay(parseInt(args["day"]));
+                    selectedJulianDay = calendar.getJulianDay();
+                    var dateStr = calendar.toString(dateFormat);
+                    settings.dateChanged(element, dateStr, calendar);
+                    if (typeof (element) !== "undefined" && !settings.showInline) {
+                        element.val(dateStr);
+                        animate('close');
+                    } else if (typeof (element) !== "undefined" && settings.showInline) {
+                        $(".ui-vestadp-selected", container).removeClass("ui-vestadp-selected");
+                        $(this).addClass("ui-vestadp-selected");
+                    }     
+                    return false;               
+                },
+                "after": function () {
+                    $('.ui-vestadp-calendar', container).fadeOut("fast", function () {
+                        renderDayView(settings);
+                    });
+                }
+            },
+            {
+                "next": function () { calendar.addYear(1); return true; },
+                "prev": function () { calendar.addYear(-1); return true; },
+                "view": function (args) { 
+                    if (args["view"] == "cal") {
+                        calendar.setMonth(parseInt(args["month"]));
+                        renderDayView(settings);
+                        return;
+                    } else if (args["view"] == "year")
+                        renderYear(settings, calendar.year);
+                    return false;             
+                 },
+                 "after": function (args) {
+                    $('.ui-vestadp-calendar', container).fadeOut("fast", function () {
+                        renderMonth(settings);
+                    });
+                 }
+            }, 
+            {
+                "next": function () {
+                    $('.ui-vestadp-calendar', container).fadeOut("fast", function () {
+                        renderYear(settings, endYear + 4);
+                    });
+                },
+                "prev": function () {
+                    $('.ui-vestadp-calendar', container).fadeOut("fast", function () {
+                        renderYear(settings, startYear - 7);
+                    });
+                },
+                "view": function (args) {
+                    if (args["view"] == "month") {
+                        calendar.setYear(parseInt(args["year"]));
+                        $('.ui-vestadp-calendar', container).fadeOut("fast", function () {
+                            renderMonth(settings);
+                        });
+                        return;
+                    }                    
+                },
+                "after": function () {  }
+            }
+        ];
 
         this.display = function (strDate, raiseChange) {
             if (typeof (strDate) === "undefined" || !strDate) {
@@ -50,6 +122,9 @@
             }
             settings.minDate = mdate;
             minDateJd = dateToGregorianJd(settings.minDate);
+            if (selectedJulianDay < minDateJd) {
+                setCalendarJulianDay(minDateJd, true);
+            }
             renderDayView(settings);
         }
 
@@ -58,7 +133,10 @@
                 return settings.maxDate;
             }            
             settings.maxDate = mdate;
-            maxDateJd = dateToGregorianJd(settings.maxDate),
+            maxDateJd = dateToGregorianJd(settings.maxDate);
+            if (selectedJulianDay > maxDateJd) {
+                setCalendarJulianDay(maxDateJd, true);
+            }
             renderDayView(settings);
         }
 
@@ -77,13 +155,7 @@
 
         this.setDate = function (date, cultured, raiseChange) {
             if (!date) {
-                selectedJulianDay = 0;
-                calendar.setJulianDay(getTodayJulianDate());
-                renderDayView(settings);
-                setElementValue("");
-                if (raiseChange) {
-                    settings.dateChanged(element, null, calendar);
-                }
+                setCalendarJulianDay(0, raiseChange);
                 return;
             }
             if ((!date.hasOwnProperty("year") && !date.hasOwnProperty("month") && !date.hasOwnProperty("day")))
@@ -97,19 +169,25 @@
             } else {
                 selectedJulianDay = gregorianToJd(date.year, date.month, date.day);
             }
-            if (selectedJulianDay<minDateJd) {
-                selectedJulianDay = minDateJd;
-            } else if (selectedJulianDay>maxDateJd){
-                selectedJulianDay = maxDateJd;
+            setCalendarJulianDay(selectedJulianDay, raiseChange);
+        };
+
+
+        function setCalendarJulianDay(jd, raiseChange) {
+            if (jd<minDateJd) {
+                jd = minDateJd;
+            } else if (maxDateJd && jd>maxDateJd){
+                jd = maxDateJd;
             }
-            calendar.setJulianDay(selectedJulianDay);            
-            var dateStr = calendar.toString(dateFormat);
+            selectedJulianDay = jd;
+            calendar.setJulianDay(jd>0 ? jd:getTodayJulianDate());
+            var dateStr = jd>0 ? calendar.toString(dateFormat): null;
+            setElementValue(dateStr);
             if (raiseChange) {
                 settings.dateChanged(element, dateStr, calendar);
-            }
-            setElementValue(dateStr);
+            }            
             renderDayView(settings);
-        };
+        }
 
         function setElementValue(val) {
             if (typeof (element) !== "undefined") {
@@ -198,10 +276,14 @@
 
             calendar.addDay(-1 * firstdow);
             for (i = 0; i < 6; i++) {
-                var wrow = $("<div></div>");
+                var wrow = $("<div></div>"),
+                    cjd, wday;
                 for (var j = 0; j < 7; j++) {
-                    var wday = $("<div data-event='click' data-handler='date' data-args='day:" + calendar.day + ",month:" + calendar.month + "'></div>").addClass("ui-vestadp-day").text(getNumber(calendar.day, opts.persianNumbers)),
                     cjd = calendar.getJulianDay();
+                    wday = $("<div data-event='click' data-handler='date'></div>")
+                                .attr('data-args',"day:" + calendar.day + ",month:" + calendar.month + ",jd:"+cjd)
+                                .addClass("ui-vestadp-day").text(getNumber(calendar.day, opts.persianNumbers));
+                    
                     if (calendar.month != currentMonth)
                         wday.addClass("ui-vestadp-inactive");
                     if ( cjd == selectedJulianDay)
@@ -221,39 +303,27 @@
                 $(container).append(renderFooter(element, opts));
             }
             calTable.fadeIn();
-            $('[data-event="click"]', container).click(function () {
+        }
+
+        function bindEventHandlers() {
+            $(container).on('click','[data-event="click"]',function () {
                 if ($(this).attr('disabled')) return;
                 var handler = $(this).attr("data-handler");
                 var args = parseArgs($(this).attr("data-args"));
-                switch (handler) {
-                    case "next":
-                        calendar.addMonth(1);
-                        break;
-                    case "prev":
-                        calendar.addMonth(-1);
-                        break;
-                    case "view":
-                        renderMonth(opts);
-                        return;
-                    case "date":
-                        calendar.setMonth(parseInt(args["month"]));
-                        calendar.setDay(parseInt(args["day"]));
-                        selectedJulianDay = calendar.getJulianDay();
-                        var dateStr = calendar.toString(dateFormat);
-                        opts.dateChanged(element, dateStr, calendar);
-                        if (typeof (element) !== "undefined" && !opts.showInline) {
-                            element.val(dateStr);
-                            animate('close');
-                        } else if (typeof (element) !== "undefined" && opts.showInline) {
-                            $(".ui-vestadp-selected", calTable).removeClass("ui-vestadp-selected");
-                            $(this).addClass("ui-vestadp-selected");
-                        }
-                        return;
+                var runAfter = clickHandlers[currentView][handler].call(this,args);
+                if (runAfter) {
+                    clickHandlers[currentView]["after"].call(this,args);
                 }
-                calTable.fadeOut("fast", function () {
-                    renderDayView(opts);
-                });
-            });
+            });   
+
+            swipedetect(container[0], function (direction) {
+                if (direction=='none') return true;
+                
+                var runAfter = clickHandlers[currentView][direction=='right' ? 'next' : 'prev'].call(this);
+                if (runAfter) {
+                    clickHandlers[currentView]['after'].call(this);
+                }
+            });   
         }
 
         function renderHeader(title, args, opts) {
@@ -267,14 +337,12 @@
         function renderFooter(elm, opts) {
             var footer = $('<div></div>').addClass('ui-vestadp-footer');
             footer.append($("<div></div>").addClass("ui-vestadp-today-btn").text(opts.regional[opts.language].today).click(function () {
-                var todayJd = getTodayJulianDate();
-                calendar.setJulianDay(todayJd);
-                elm.val(calendar.toString(dateFormat));
+                setCalendarJulianDay(getTodayJulianDate());
                 animate('close');
             }));
             footer.append($("<div></div>").addClass("ui-vestadp-clear").text(opts.regional[opts.language].clear).click(function () {
+                setCalendarJulianDay(0, true);
                 animate('close');
-                that.setDate(null, false, true);
             }));
             return footer;
         }
@@ -302,30 +370,8 @@
                 $(container).append(renderFooter(element, opts));
             }
             calTable.fadeIn();
-            $('[data-event="click"]', container).click(function () {
-                var handler = $(this).attr("data-handler");
-                var args = parseArgs($(this).attr("data-args"));
-                switch (handler) {
-                    case "next":
-                        calendar.addYear(1);
-                        break;
-                    case "prev":
-                        calendar.addYear(-1);
-                        break;
-                    case "view":
-                        if (args["view"] == "cal") {
-                            calendar.setMonth(parseInt(args["month"]));
-                            renderDayView(opts);
-                            return;
-                        } else if (args["view"] == "year")
-                            renderYear(opts, calendar.year);
-                        return;
-                }
-                calTable.fadeOut("fast", function () {
-                    renderMonth(opts);
-                });
-            });
         }
+
 
         function renderYear(opts, year) {
             currentView = 2;
@@ -354,31 +400,8 @@
                 $(container).append(renderFooter(element, opts));
             }
             calTable.fadeIn();
-            $('[data-event="click"]', container).click(function () {
-                var handler = $(this).attr("data-handler");
-                var args = parseArgs($(this).attr("data-args"));
-                switch (handler) {
-                    case "next":
-                        calTable.fadeOut("fast", function () {
-                            renderYear(opts, endYear + 4);
-                        });
-                        return;
-                    case "prev":
-                        calTable.fadeOut("fast", function () {
-                            renderYear(opts, startYear - 7);
-                        });
-                        return;
-                    case "view":
-                        if (args["view"] == "month") {
-                            calendar.setYear(parseInt(args["year"]));
-                            calTable.fadeOut("fast", function () {
-                                renderMonth(opts);
-                            });
-                            return;
-                        }
-                }
-            });
         }
+        
 
         // to parse argument lists passed to clickable objects
         function parseArgs(args) {
@@ -461,6 +484,14 @@
             var cal = new window[settings.calendar + 'Calendar' ]();
             cal.setJulianDay(dateJd);
             return cal.toString(dateF);
+        }
+            
+        function animate(dir) {
+            var cmd = {
+                slide : { open : 'slideDown', close: 'slideUp' },
+                fade : { open : 'fadeIn', close: 'fadeOut' }
+            }
+            $(mainContainer)[cmd[settings.animation][dir]]();
         }
 
         function parseDate(format, value) {
@@ -607,18 +638,54 @@
 
             return { year: year, month: month, day: day };
         }
-
-        function animate(dir) {
-            var cmd = {
-                slide : { open : 'slideDown', close: 'slideUp' },
-                fade : { open : 'fadeIn', close: 'fadeOut' }
-            }
-            $(container)[cmd[settings.animation][dir]]();
-        }
-
     };
 
-
+    function swipedetect(el, callback){
+    
+        var touchsurface = el,
+        swipedir,
+        startX,
+        startY,
+        distX,
+        distY,
+        threshold = 150, //required min distance traveled to be considered swipe
+        restraint = 100, // maximum distance allowed at the same time in perpendicular direction
+        allowedTime = 300, // maximum time allowed to travel that distance
+        elapsedTime,
+        startTime,
+        handleswipe = callback || function(swipedir){}
+    
+        touchsurface.addEventListener('touchstart', function(e){
+            var touchobj = e.changedTouches[0]
+            swipedir = 'none'
+            dist = 0
+            startX = touchobj.pageX
+            startY = touchobj.pageY
+            startTime = new Date().getTime() // record time when finger first makes contact with surface
+            //e.preventDefault()
+        }, false)
+    
+        touchsurface.addEventListener('touchmove', function(e){
+            e.preventDefault() // prevent scrolling when inside DIV
+        }, false)
+    
+        touchsurface.addEventListener('touchend', function(e){
+            var touchobj = e.changedTouches[0]
+            distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
+            distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
+            elapsedTime = new Date().getTime() - startTime // get time elapsed
+            if (elapsedTime <= allowedTime){ // first condition for awipe met
+                if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint){ // 2nd condition for horizontal swipe met
+                    swipedir = (distX < 0)? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
+                }
+                else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
+                    swipedir = (distY < 0)? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
+                }
+            }
+            handleswipe(swipedir)
+            //e.preventDefault()
+        }, false)
+    }
 
     vestaDatePicker.defaultSettings = {
         direction: "rtl",

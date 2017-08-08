@@ -79,7 +79,7 @@
   margin: 1px;
 }
 
-.ui-vestadp-day, .ui-vestadp-monthlist > td, .ui-vestadp-yearlist > td, .ui-vestadp-today, .ui-vestadp-clear {
+.ui-vestadp-day, .ui-vestadp-monthlist > td, .ui-vestadp-yearlist > td, .ui-vestadp-today-btn, .ui-vestadp-clear {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAGQEAAAAAAao4lEAAAAAmJLR0T//xSrMc0AAAAJcEhZcwAAAEgAAABIAEbJaz4AAABISURBVDjLY3iXxzCKRhHV0bNnDM+NGJ7fYXgxk+FlJsOrOIbXIQxvYhjepjK8i2Z4H8DwwZjhIzPDx7UMn+QYPhmOolFEDAIAjUD2JAAuNW8AAAAldEVYdGRhdGU6Y3JlYXRlADIwMTMtMDUtMDNUMDk6MjE6MDMtMDc6MDAeHtLpAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDEzLTA1LTAzVDA5OjIxOjAzLTA3OjAwb0NqVQAAAABJRU5ErkJggg%3D%3D") repeat-x scroll 50% 50% #E6E6E6;
   border: 1px solid #D3D3D3;
   color: #555555;
@@ -97,9 +97,21 @@
     border: 1px solid #999999;
     color: #212121;
   }
+
+  &.ui-vestadp-today {
+
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
+    color: silver !important;
+    &:hover {
+
+    }
+  }  
 }
 
-.ui-vestadp-monthlist > td:hover, .ui-vestadp-yearlist > td:hover, .ui-vestadp-today:hover, .ui-vestadp-clear:hover {
+.ui-vestadp-monthlist > td:hover, .ui-vestadp-yearlist > td:hover, .ui-vestadp-today-btn:hover, .ui-vestadp-clear:hover {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAGQEAAAAAAao4lEAAAAAmJLR0T//xSrMc0AAAAJcEhZcwAAAEgAAABIAEbJaz4AAABISURBVDjLY3j6n2EUjSKqo1u3GG57MdxxY7gby3BvIsP9PwwPMxgefWB4Us7w9DHDcz+GF/MYXl5ieHWW4XUpw+uJo2gUEYMAvlejJVIWsXwAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTMtMDUtMDNUMDk6MjE6MDMtMDc6MDAeHtLpAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDEzLTA1LTAzVDA5OjIxOjAzLTA3OjAwb0NqVQAAAABJRU5ErkJggg%3D%3D") repeat-x scroll 50% 50% #DADADA;
   border: 1px solid #999999;
   color: #212121;
@@ -127,7 +139,7 @@
   height: 2.2em;
 }
 
-.ui-vestadp-today {
+.ui-vestadp-today-btn {
   top: 0.1em;
   left: 0.12em;
 }
@@ -137,7 +149,7 @@
   right: 0.1em;
 }
 
-.ui-vestadp-today, .ui-vestadp-clear {
+.ui-vestadp-today-btn, .ui-vestadp-clear {
   display: inline-block;
   line-height: 1.8em;
   text-align: center;
@@ -146,7 +158,7 @@
   width: 8.1em;
 }
 
-.ui-vestadp-today:hover, .ui-vestadp-clear:hover {
+.ui-vestadp-today-btn:hover, .ui-vestadp-clear:hover {
   background-color: gray;
   color: white;
 }
