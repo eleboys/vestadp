@@ -5,10 +5,12 @@ var sass = require('gulp-sass');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var minify = require('gulp-minify-css');
+var autoprefixer    = require('gulp-autoprefixer');
 
 gulp.task('sass', function () {
     return gulp.src('src/scss/**/*.scss')
         .pipe(sass({ outputStyle: "compressed" }).on('error', sass.logError))
+        .pipe(autoprefixer(['last 2 versions', 'ie 8', 'ie 9']))
         .pipe(gulp.dest('dist/css/'));
 });
  
