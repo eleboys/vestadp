@@ -20,12 +20,12 @@
             var today = new Date(),
                 nextWeek = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()+6));
             $("#dpEn").vestadp({
-               dateFormat : "D dd M yy",
+               dateFormat : "yy-mm-dd",
                direction: "ltr",
                showFooter: false,
                persianNumbers: false,
-               minDate: null,
-               maxDate: nextWeek,
+            //    minDate: null,
+            //    maxDate: nextWeek,
                language: 'en',
                calendar: "gregorian"
             });
@@ -52,7 +52,7 @@
     </p>
     <p>
         Left To Right Sample (Gregorian)
-        <input type="text" id="dpEn" />
+        <input type="text" id="dpEn" value="2017-09-14" />
     </p>
 
     <p>&nbsp;</p>

@@ -65,9 +65,9 @@
         };
 
         this.setDate = function(year, month, day) {
-            this.setDay(day);
-            this.setMonth(month);
             this.setYear(year);
+            this.setMonth(month);
+            this.setDay(day);
         };
 
         this.addMonth = function (month) {
