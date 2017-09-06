@@ -1,6 +1,6 @@
 {
   "name": "vestadatepicker",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "VestaDatePicker is a multi culture datepicker that can be feed with your own custom calendar algoritms, as it is included",
   "main": "src/js/VestaDatePicker.js",
   "scripts": {
