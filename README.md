@@ -1,9 +1,14 @@
-What is VestaDatePicker?
+About VestaDatePicker?
 ------------------------
 
-VestaDatePicker is a multi-culture date picker in form of JQuery plugin that can be feed with your own custom calendar algorithms, as it is already included with some of the most known calendars such as "Gregorian", "Persian" and "Hijri".
+VestaDatePicker is a multi-culture javascript date picker in form of JQuery plugin that can be feed with your own custom calendar algorithms, as it is already included with some of the most known calendars such as "Gregorian", "Persian" and "Hijri".
+
+What makes this datepicker so different from other libraries is that you can have all cultures and all different datepicker allgoritm at the same time in a page or hot switch the culture of an input without any js referesh/cleanup or page postback. this is mostly usefull when you are using modern SPA frameworks and you may change the app culture/language just from client side.
 
 ![alt text](http://uupload.ir/files/o7p3_datepicker.jpg)
+
+you can see the [demo from here](https://vestadp-fe09a.web.app/)
+
 
 Features
 --------
@@ -19,10 +24,11 @@ Features
 
 Installation
 ---------------
-**Bower:**
 
 ```
-bower install vestadp --save
+> npm install
+> npm run bower
+> npm run start
 ```
 
 **Usage:**
@@ -103,7 +109,3 @@ Links
 -------
 
 Angular directive is also provided: ([Look here for the source](https://github.com/eleboys/ng-vestadp))
-
-```
-bower install ng-vestadp --save
-```
