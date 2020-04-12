@@ -4,46 +4,13 @@
     <title>Test VestaDatePicker</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="dist/js/VestaDatePicker.js"></script>
-    <script src="dist/js/VestaDatePicker.gregorian.js"></script>
-    <script src="dist/js/VestaDatePicker.hijri.js"></script>
-    <script src="dist/js/VestaDatePicker.persian.js"></script>
+    <script src="dist/js/vesta-date-picker.js"></script>
     <link href="dist/css/VestaDatePicker.css" type="text/css" rel="stylesheet" />
     <style>
         body {
             font-size: 10pt;
         } 
     </style>
-    <script>
-        $(function () {
-            var today = new Date(),
-                nextWeek = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()+6));
-            $("#dpEn").vestadp({
-               dateFormat : "yy-mm-dd",
-               direction: "ltr",
-               showFooter: false,
-               persianNumbers: false,
-            //    minDate: null,
-            //    maxDate: nextWeek,
-               language: 'en',
-               calendar: "gregorian"
-            });
-            $("#medate").vestadp({
-                calendar: "hijri",                
-                dateChanged: function (elm, dateStr) {
-                    $("#pdate").text(dateStr);  // formated date
-                }
-            });
-            $("#testdp").vestadp({                
-               dateFormat : "DD dd MM yy" ,
-               dateChanged: function(elm, dateStr, calendar){
-                   var date = elm.vestadp('getDate'); // original javascript date object
-                   alert(date);
-               }
-            });
-        });
-    </script>
 </head>
 <body>
     <p style="text-align: right">
@@ -64,5 +31,16 @@
     <p>Inline Sample</p>
     <p id="medate" style="text-align: center">&nbsp;</p>
     <p>&nbsp;</p>
+    <script>
+        new VestaDatePicker(document.getElementById("testdp"), {
+            persianNumbers: true,
+            language: "fa"
+        });
+        new VestaDatePicker(document.getElementById("dpEn"));
+        new VestaDatePicker(document.getElementById("medate"), {
+            persianNumbers: true,
+            language: "fa"
+        });
+    </script>
 </body>
 </html>
