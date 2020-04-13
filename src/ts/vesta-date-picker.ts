@@ -41,6 +41,80 @@ export class VestaDatePicker {
         this.bindEventHandlers();
     }
 
+    public getCalendar(): VestaDatePickerCalendar {
+        return this._calendar;
+    };
+
+    public getOptions(): VestaDatePickerSettings {
+        return this._settings;
+    }
+
+    public getMinDate(): Date {
+        return this._settings.minDate;
+    }
+
+    public setMinDate(mdate: Date): void {
+        this._settings.minDate = mdate;
+        const minDateJd = this.dateToGregorianJd(this._settings.minDate);
+        if (this._selectedJulianDay < minDateJd) {
+            this.setCalendarJulianDay(minDateJd, true);
+        }
+        this.renderDayView();
+    }
+
+    public getMaxDate(): Date {
+        return this._settings.maxDate;
+    }
+
+    public setMaxDate(mdate: Date): void {         
+        this._settings.maxDate = mdate;
+        const maxDateJd = this.dateToGregorianJd(this._settings.maxDate);
+        if (this._selectedJulianDay > maxDateJd) {
+            this.setCalendarJulianDay(maxDateJd, true);
+        }
+        this.renderDayView();
+    }
+
+    public getDate(cultured: true, dateF: string): Date | string {
+        if (this._selectedJulianDay === 0){
+            return null;
+        }
+
+        if (cultured) {
+            dateF = typeof(dateF) !== "undefined" ? dateF : this._dateFormat;
+            return this._calendar.toString(dateF);
+        } else {
+            var date = this.jdToGregorian(this._calendar.getJulianDay());
+            return new Date(Date.UTC(date.year, date.month-1, date.day));
+        }
+    };
+
+    public setDate(date: VestaDatePickerDate, cultured: boolean, raiseChange: boolean) {
+        if (!date) {
+            this.setCalendarJulianDay(0, raiseChange);
+            return;
+        }
+        if ((!date.hasOwnProperty("year") && !date.hasOwnProperty("month") && !date.hasOwnProperty("day")))
+            throw "argument exception, date";
+        date.month = typeof (date.month) === "undefined" || isNaN(date.month) ? this._calendar.getMonth() : date.month;
+        date.day = typeof (date.day) === "undefined" || isNaN(date.day) ? this._calendar.getDay() : date.day;
+        if (cultured) {
+            this._calendar.setDate(date.year, date.month, date.day);
+            this._selectedJulianDay = this._calendar.getJulianDay();
+        } else {
+            this._selectedJulianDay = this.gregorianToJd(date.year, date.month, date.day);
+        }
+        this.setCalendarJulianDay(this._selectedJulianDay, raiseChange);
+    }
+
+    public hide() {
+        this._mainContainer.classList.add("ui-vestadp-closed");
+    }
+
+    public show() {
+        this._mainContainer.classList.remove("ui-vestadp-closed");
+    }
+
     private dateToGregorianJd(date: Date | string): number {
         if (!date) return null;
         if (typeof(date)==='string') date = new Date(date);
@@ -58,6 +132,37 @@ export class VestaDatePicker {
                ((month <= 2) ? 0 : ((((year % 4) == 0) && (!(((year % 100) == 0) && ((year % 400) != 0)))) ? -1 : -2)) + day);
     }
 
+    private jdToGregorian(jd: number): VestaDatePickerDate {
+        var wjd, depoch, quadricent, dqc, cent, dcent, quad, dquad,
+            yindex, month, day, year, yearday, leapadj;
+
+        var GREGORIAN_EPOCH = 1721425.5;
+        wjd = Math.floor(jd - 0.5) + 0.5;
+        depoch = wjd - GREGORIAN_EPOCH;
+        quadricent = Math.floor(depoch / 146097);
+        dqc = this.mod(depoch, 146097);
+        cent = Math.floor(dqc / 36524);
+        dcent = this.mod(dqc, 36524);
+        quad = Math.floor(dcent / 1461);
+        dquad = this.mod(dcent, 1461);
+        yindex = Math.floor(dquad / 365);
+        year = (quadricent * 400) + (cent * 100) + (quad * 4) + yindex;
+        if (!((cent == 4) || (yindex == 4))) {
+            year++;
+        }
+        var isLeap = ((year % 4) == 0) && (!(((year % 100) == 0) && ((year % 400) != 0)));
+        yearday = wjd - this.gregorianToJd(year, 1, 1);
+        leapadj = ((wjd < this.gregorianToJd(year, 3, 1)) ? 0 : (isLeap ? 1 : 2));
+        month = Math.floor((((yearday + leapadj) * 12) + 373) / 367);
+        day = (wjd - this.gregorianToJd(year, month, 1)) + 1;
+
+        return { year: year, month: month, day: day };
+    }
+
+    private mod(a: number, b: number) {
+        return a - (b * Math.floor(a / b));
+    };
+
     private render(strDate?: string, raiseChange?: boolean): void {
         if (typeof (strDate) === "undefined" || !strDate) {
             this.setDate(null, false, false);
@@ -70,24 +175,6 @@ export class VestaDatePicker {
             return;
         }
         this.setDate(date, true, false);
-    }
-
-    private setDate(date: VestaDatePickerDate, cultured: boolean, raiseChange: boolean) {
-        if (!date) {
-            this.setCalendarJulianDay(0, raiseChange);
-            return;
-        }
-        if ((!date.hasOwnProperty("year") && !date.hasOwnProperty("month") && !date.hasOwnProperty("day")))
-            throw "argument exception, date";
-        date.month = typeof (date.month) === "undefined" || isNaN(date.month) ? this._calendar.getMonth() : date.month;
-        date.day = typeof (date.day) === "undefined" || isNaN(date.day) ? this._calendar.getDay() : date.day;
-        if (cultured) {
-            this._calendar.setDate(date.year, date.month, date.day);
-            this._selectedJulianDay = this._calendar.getJulianDay();
-        } else {
-            this._selectedJulianDay = this.gregorianToJd(date.year, date.month, date.day);
-        }
-        this.setCalendarJulianDay(this._selectedJulianDay, raiseChange);
     }
 
     private setCalendarJulianDay(jd: number, raiseChange: boolean): void {
@@ -109,7 +196,7 @@ export class VestaDatePicker {
         this.renderDayView();
     }
 
-    renderDayView() {
+    private renderDayView() {
         this._currentView = 0;
         const cal = this._calendar;
         const months = cal.getMonthList(false);
@@ -167,7 +254,7 @@ export class VestaDatePicker {
         calTable.style.display = "inherit";
     }
 
-    renderMonthView() {
+    private renderMonthView() {
         const opts = this._settings;
         const headerTitle = this.getNumber(this._calendar.getYear());
         const header = this.drawHeader(headerTitle, "view:year")
@@ -201,7 +288,7 @@ export class VestaDatePicker {
         calTable.style.display = "inherit";
     }
 
-    renderYearView(year: number) {
+    private renderYearView(year: number) {
         this._currentView = 2;
         const calTable = el("table.ui-vestadp-calendar", {
             cellspacing: 1,
@@ -237,7 +324,7 @@ export class VestaDatePicker {
         calTable.style.display = "inherit";
     }
 
-    drawFooter() {
+    private drawFooter() {
         const opts = this._settings;
         const todayBtn: HTMLElement = el("div.ui-vestadp-today-btn", opts.regional[opts.language].today);
         todayBtn.addEventListener("click", () => {
@@ -255,7 +342,7 @@ export class VestaDatePicker {
         return footer;
     }
 
-    drawHeader(title: string, args: string): HTMLElement {
+    private drawHeader(title: string, args: string): HTMLElement {
         const opts = this._settings;
         const header = el("div.ui-vestadp-header", [
             el("div.ui-vestadp-prev", "«", {
@@ -349,14 +436,6 @@ export class VestaDatePicker {
         });
         this._mainContainer.addEventListener("focus", () => console.log("focused"));
         this._mainContainer.addEventListener("blur", () => console.log("blured"));
-    }
-
-    private hide() {
-        this._mainContainer.classList.add("ui-vestadp-closed");
-    }
-
-    private show() {
-        this._mainContainer.classList.remove("ui-vestadp-closed");
     }
 
     private isTextBox(element: HTMLElement) {

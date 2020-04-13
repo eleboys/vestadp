@@ -34,17 +34,24 @@
     <p id="medate" style="text-align: center">&nbsp;</p>
     <p>&nbsp;</p>
     <script>
-        new VestaDatePicker(document.getElementById("testdp"), {
+        var dp1 = new VestaDatePicker(document.getElementById("testdp"), {
             persianNumbers: true,
             dateFormat: "DD dd MM yy",
             calendar: "persian",
-            language: "fa"
+            language: "fa",
+            dateChanged: function(elm, dateStr, calendar){
+                var date = dp1.getDate(); // original javascript date object
+                alert(date);
+            }
         });
         new VestaDatePicker(document.getElementById("dpEn"));
         new VestaDatePicker(document.getElementById("medate"), {
             persianNumbers: true,
             calendar: "persian",
-            language: "fa"
+            language: "fa",
+            dateChanged: function (elm, dateStr) {
+                document.getElementById("pdate").innerText = dateStr;
+            }
         });
     </script>
 </body>

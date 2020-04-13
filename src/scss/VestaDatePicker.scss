@@ -42,8 +42,11 @@ $screen-xs: 480px !default;
 			bottom: 0;
 			background-color: rgba(0,0,0,0.7);
 		}
-	}
-
+  }
+  
+  &.ui-vestadp-closed {
+    display: none;
+  }
 }
 
 .ui-vestadp-header,
