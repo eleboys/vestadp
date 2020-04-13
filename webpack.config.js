@@ -6,6 +6,7 @@ module.exports = {
     "vesta-date-picker": "./src/ts/vesta-date-picker.ts",
     "vesta-date-picker.persian": "./src/ts/vesta-date-picker-persian-calendar.ts",
     "vesta-date-picker.gregorian": "./src/ts/vesta-date-picker-gregorian-calendar.ts",
+    "vesta-date-picker.hijri": "./src/ts/vesta-date-picker-hijri-calendar.ts",
     "vesta-date-picker-style.normal": "./src/scss/VestaDatePicker.scss",
     "vesta-date-picker-style.jqui": "./src/scss/VestaDatePicker.jqui.scss",
   },

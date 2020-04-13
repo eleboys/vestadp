@@ -9,6 +9,4 @@ export interface VestaDatePickerSettings {
     dateChanged: Function;
     minDate: Date;
     maxDate: Date;
-    animation: string;
-    showInline: boolean;
 }

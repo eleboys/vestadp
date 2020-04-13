@@ -21,7 +21,6 @@ export class VestaDatePicker {
     private _container: HTMLElement;
     private _mainContainer: HTMLElement;
     private _clickHandlers: any;
-    private _hideTimeoutHandler: number;
     private _calendar: VestaDatePickerCalendar;
 
     constructor(element: HTMLElement, options?: VestaDatePickerSettings) {
@@ -227,7 +226,7 @@ export class VestaDatePicker {
             let cjd, wday : HTMLElement;
             for (var j = 0; j < 7; j++) {
                 cjd = cal.getJulianDay();
-                wday = el("div.ui-vestadp-day", this.getNumber(cal.getDay()), {
+                wday = el("button.ui-vestadp-day", this.getNumber(cal.getDay()), {
                     "data-event": "click",
                     "data-handler": "date",
                     "data-args": "day:" + cal.getDay() + ",month:" + cal.getMonth() + ",jd:" + cjd
@@ -248,7 +247,7 @@ export class VestaDatePicker {
         }
         cal.setJulianDay(jd);
         mount(this._container, calTable);
-        if (this._settings.showFooter && !this._settings.showInline) {
+        if (this._settings.showFooter) {
             mount(this._container, this.drawFooter())
         }
         calTable.style.display = "inherit";
@@ -262,14 +261,13 @@ export class VestaDatePicker {
         let mIndex = 0;
         this._currentView = 1;
         setChildren(this._container, [header]);
-        const calTable = el("table.ui-vestadp-calendar", {
-            cellspacing: 1,
+        const calTable = el("div.ui-vestadp-calendar", {
             style: { direction: opts.direction, display: 'none' }
         });
         for (let i = 0; i < 3; i++) {
-            const mrow = el("tr.ui-vestadp-monthlist");
+            const mrow = el("div.ui-vestadp-monthlist");
             for (let j = 0; j < 4; j++) {
-                const mcell: HTMLElement = el("td", months[mIndex], {
+                const mcell: HTMLElement = el("button", months[mIndex], {
                     "data-event": "click",
                     "data-handler": "view",
                     "data-args": "view:cal,month:" + (mIndex + 1)
@@ -282,7 +280,7 @@ export class VestaDatePicker {
             mount(calTable, mrow);
         }
         mount(this._container, calTable);
-        if (this._settings.showFooter && !this._settings.showInline) {
+        if (this._settings.showFooter) {
             mount(this._container, this.drawFooter())
         }
         calTable.style.display = "inherit";
@@ -290,7 +288,7 @@ export class VestaDatePicker {
 
     private renderYearView(year: number) {
         this._currentView = 2;
-        const calTable = el("table.ui-vestadp-calendar", {
+        const calTable = el("div.ui-vestadp-calendar", {
             cellspacing: 1,
             style: { direction: "ltr", display: 'none' }
         });
@@ -302,9 +300,9 @@ export class VestaDatePicker {
         setChildren(this._container, [header]);
 
         for (let i = 0; i < 3; i++) {
-            const yrow = el("tr.ui-vestadp-yearlist");
+            const yrow = el("div.ui-vestadp-yearlist");
             for (let j = 0; j < 4; j++) {
-                const ycell: HTMLElement = el("td", this.getNumber(year), {
+                const ycell: HTMLElement = el("button", this.getNumber(year), {
                     "data-handler": "view",
                     "data-args": "view:month,year:" + year,
                     "data-event": "click"
@@ -318,7 +316,7 @@ export class VestaDatePicker {
             mount(calTable, yrow);
         }
         mount(this._container, calTable);
-        if (this._settings.showFooter && !this._settings.showInline) {
+        if (this._settings.showFooter) {
             mount(this._container, this.drawFooter())
         }
         calTable.style.display = "inherit";
@@ -326,13 +324,13 @@ export class VestaDatePicker {
 
     private drawFooter() {
         const opts = this._settings;
-        const todayBtn: HTMLElement = el("div.ui-vestadp-today-btn", opts.regional[opts.language].today);
+        const todayBtn: HTMLElement = el("button.ui-vestadp-today-btn", opts.regional[opts.language].today);
         todayBtn.addEventListener("click", () => {
             this.setCalendarJulianDay(this.getTodayJulianDate(), true);
             this.hide();
         });
 
-        const clearBtn: HTMLElement = el("div.ui-vestadp-clear", opts.regional[opts.language].clear);
+        const clearBtn: HTMLElement = el("button.ui-vestadp-clear-btn", opts.regional[opts.language].clear);
         clearBtn.addEventListener("click", () => {
             this.setCalendarJulianDay(0, true);
             this.hide();
@@ -345,18 +343,18 @@ export class VestaDatePicker {
     private drawHeader(title: string, args: string): HTMLElement {
         const opts = this._settings;
         const header = el("div.ui-vestadp-header", [
-            el("div.ui-vestadp-prev", "«", {
+            el("button.ui-vestadp-prev", opts.regional[opts.language].previousBtn, {
                 "data-event": "click",
                 "data-handler": "prev",
                 "title": opts.regional[opts.language].previous
             }),
-            el("div.ui-vestadp-title", title, {
+            el("button.ui-vestadp-title", title, {
                 "data-event": "click",
                 "data-handler": "view",
                 "data-args": args,
 
             }),
-            el("div.ui-vestadp-next", "»", {
+            el("button.ui-vestadp-next", opts.regional[opts.language].nextBtn, {
                 "data-event": "click",
                 "data-handler": "next",
                 "title": opts.regional[opts.language].next
@@ -373,11 +371,12 @@ export class VestaDatePicker {
     private drawUI(element: HTMLElement): void {
         this._container = el("div.ui-vestadp-container");
         this._mainContainer = el("div.ui-vestadp-maincontainer", this._container);
-        this._mainContainer.classList.add(this._settings.showInline ? 'ui-vestadp-inline' : 'ui-vestadp-popup');
         this._element = element;
         if (this.isTextBox(element)) {
+            this._mainContainer.classList.add('ui-vestadp-popup');
             this.drawInputUI();
         } else {
+            this._mainContainer.classList.add('ui-vestadp-inline');
             this.drawInlineUI();
         }
         setAttr(this._element, { vestadp: true });
@@ -393,6 +392,7 @@ export class VestaDatePicker {
     }
 
     private drawInputUI() {
+        this._isInlinePicker = false;
         setAttr(this._mainContainer, {
             style: { position: "absolute" },
             "data-rel": "vestadatepicker"
@@ -411,7 +411,7 @@ export class VestaDatePicker {
                 left: rect.left + document.body.scrollLeft
             };            
             if (this._settings.direction=="rtl")
-                left = offset.left - (this._mainContainer.offsetWidth - this._element.offsetWidth) +"px"
+                left = offset.left + (this._mainContainer.offsetWidth - this._element.offsetWidth) +"px"
             else
                 left = offset.left + "px";
             setStyle(this._mainContainer, {
@@ -427,15 +427,8 @@ export class VestaDatePicker {
         this._element.addEventListener("propertychange", renderFn);
         this._element.addEventListener("paste", renderFn);
         this._element.addEventListener("click", evt => evt.stopPropagation());
-        this._element.addEventListener("blur", evt => {
-            this._hideTimeoutHandler = setTimeout(() => this.hide(), 200);
-        });
-        this._mainContainer.addEventListener("click", (evt) => {
-            clearTimeout(this._hideTimeoutHandler);
-            evt.stopPropagation();
-        });
-        this._mainContainer.addEventListener("focus", () => console.log("focused"));
-        this._mainContainer.addEventListener("blur", () => console.log("blured"));
+        this._mainContainer.addEventListener("click", (evt) => evt.stopPropagation());
+        document.addEventListener("click", evt => this.hide());
     }
 
     private isTextBox(element: HTMLElement) {
@@ -619,26 +612,30 @@ export class VestaDatePicker {
                 today: "امروز",
                 clear: "پاکن",
                 previous: "قبلی",
-                next: "بعدی"
+                next: "بعدی",
+                previousBtn: "«",
+                nextBtn: "»"
             },
             "en": {
                 today: "Today",
                 clear: "Clear",
                 previous: "Previous",
-                next: "Next"
+                next: "Next",
+                previousBtn: "«",
+                nextBtn: "»"
             },
             "ar": {
                 today: "الیوم",
                 clear: "واضح",
                 previous: "سابق",
-                next: "التالی"
+                next: "التالی",
+                previousBtn: "«",
+                nextBtn: "»"
             }
         },
         language: 'en',
         calendar: "gregorian", // [gregorian & persian & hijri] are available.
-        dateChanged: function () { },
-        animation: 'fade',
-        showInline: false
+        dateChanged: function () { }
     };
 
     static calendars: any = {};

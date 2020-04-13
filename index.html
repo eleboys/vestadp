@@ -7,6 +7,7 @@
     <script src="dist/js/vesta-date-picker.js"></script>
     <script src="dist/js/vesta-date-picker.persian.js"></script>
     <script src="dist/js/vesta-date-picker.gregorian.js"></script>
+    <script src="dist/js/vesta-date-picker.hijri.js"></script>
     <link href="dist/css/VestaDatePicker.css" type="text/css" rel="stylesheet" />
     <style>
         body {
@@ -17,7 +18,7 @@
 <body>
     <p style="text-align: right">
         <input type="text" id="testdp" style="direction:rtl" />
-        Right To Left Sample (Shamsi):
+        Right To Left Sample (Hijri):
     </p>
     <p>
         Left To Right Sample (Gregorian)
@@ -30,29 +31,31 @@
     <p>&nbsp;</p>
     <p id="pdate">&nbsp;</p>
     <p>&nbsp;</p>
-    <p>Inline Sample</p>
+    <p>Inline Sample (Persian)</p>
     <p id="medate" style="text-align: center">&nbsp;</p>
     <p>&nbsp;</p>
     <script>
         var dp1 = new VestaDatePicker(document.getElementById("testdp"), {
             persianNumbers: true,
-            dateFormat: "DD dd MM yy",
-            calendar: "persian",
-            language: "fa",
-            dateChanged: function(elm, dateStr, calendar){
+            calendar: "hijri",
+            language: "ar",
+            direction: "rtl",
+            dateChanged: function (elm, dateStr) {
                 var date = dp1.getDate(); // original javascript date object
                 alert(date);
             }
         });
         new VestaDatePicker(document.getElementById("dpEn"));
-        new VestaDatePicker(document.getElementById("medate"), {
-            persianNumbers: true,
-            calendar: "persian",
-            language: "fa",
-            dateChanged: function (elm, dateStr) {
-                document.getElementById("pdate").innerText = dateStr;
-            }
-        });
+        // new VestaDatePicker(document.getElementById("medate"), {
+        //     persianNumbers: true,
+        //     dateFormat: "DD dd MM yy",
+        //     calendar: "persian",
+        //     direction: "rtl",
+        //     language: "fa",
+        //     dateChanged: function(elm, dateStr, calendar){
+        //         document.getElementById("pdate").innerText = dateStr;
+        //     }
+        // });
     </script>
 </body>
 </html>
