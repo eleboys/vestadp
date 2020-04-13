@@ -1,7 +1,9 @@
 module.exports = {
     mode: "development",
     entry: {
-        "vesta-date-picker": "./src/ts/vesta-date-picker.ts"
+        "vesta-date-picker": "./src/ts/vesta-date-picker.ts",
+        "vesta-date-picker.persian": "./src/ts/vesta-date-picker-persian-calendar.ts",
+        "vesta-date-picker.gregorian": "./src/ts/vesta-date-picker-gregorian-calendar.ts",
     },
     output: {
         filename: '[name].js',

@@ -1,5 +1,3 @@
-import { VestaDatePickerCalendar } from "./vesta-date-picker-calendar";
-
 export interface VestaDatePickerSettings {
     direction: "rtl" | "ltr";
     dateFormat: string;
@@ -7,7 +5,7 @@ export interface VestaDatePickerSettings {
     persianNumbers: boolean;
     regional: any;
     language: string;
-    calendar: VestaDatePickerCalendar;
+    calendar: "persian" | "gregorian" | "hijri";
     dateChanged: Function;
     minDate: Date;
     maxDate: Date;

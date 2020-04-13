@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="dist/js/vesta-date-picker.js"></script>
+    <script src="dist/js/vesta-date-picker.persian.js"></script>
+    <script src="dist/js/vesta-date-picker.gregorian.js"></script>
     <link href="dist/css/VestaDatePicker.css" type="text/css" rel="stylesheet" />
     <style>
         body {
@@ -34,11 +36,14 @@
     <script>
         new VestaDatePicker(document.getElementById("testdp"), {
             persianNumbers: true,
+            dateFormat: "DD dd MM yy",
+            calendar: "persian",
             language: "fa"
         });
         new VestaDatePicker(document.getElementById("dpEn"));
         new VestaDatePicker(document.getElementById("medate"), {
             persianNumbers: true,
+            calendar: "persian",
             language: "fa"
         });
     </script>
