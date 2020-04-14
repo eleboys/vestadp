@@ -21,13 +21,6 @@ $font_size: 10pt;
     font-family: $font-family;
     background-color: $background_color;
 
-    @media (min-width:0) and (max-width: $screen-xs) {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
     tbody, td {
       padding: 0px;
       margin: 0px;
@@ -36,6 +29,16 @@ $font_size: 10pt;
 
   &.ui-vestadp-popup {
     z-index:3000;
+
+    .ui-vestadp-container {
+      @media (min-width:0) and (max-width: $screen-xs) {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+
 		@media (min-width:0) and (max-width: $screen-xs) {
 			position: fixed !important;
 			top: 0 !important;
@@ -51,6 +54,22 @@ $font_size: 10pt;
   }
   
   &.ui-vestadp-inline {
+
+  }
+
+  .ui-vestadp-close-btn {
+    color: $text_color;
+    font-size: $header_font_size;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+
+    @media (min-width:0) and (max-width: $screen-xs) {
+      display: inherit;
+    }
 
   }
 }

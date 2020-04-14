@@ -1,7 +1,7 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-  mode: "development",
+  mode: "production",
   entry: {
     "vesta-date-picker": "./src/ts/vesta-date-picker.ts",
     "vesta-date-picker.persian": "./src/ts/vesta-date-picker-persian-calendar.ts",

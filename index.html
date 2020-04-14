@@ -46,16 +46,16 @@
             }
         });
         new VestaDatePicker(document.getElementById("dpEn"));
-        // new VestaDatePicker(document.getElementById("medate"), {
-        //     persianNumbers: true,
-        //     dateFormat: "DD dd MM yy",
-        //     calendar: "persian",
-        //     direction: "rtl",
-        //     language: "fa",
-        //     dateChanged: function(elm, dateStr, calendar){
-        //         document.getElementById("pdate").innerText = dateStr;
-        //     }
-        // });
+        new VestaDatePicker(document.getElementById("medate"), {
+            persianNumbers: true,
+            dateFormat: "DD dd MM yy",
+            calendar: "persian",
+            direction: "rtl",
+            language: "fa",
+            dateChanged: function(elm, dateStr, calendar){
+                document.getElementById("pdate").innerText = dateStr;
+            }
+        });
     </script>
 </body>
 </html>
