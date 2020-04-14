@@ -21,14 +21,15 @@ Features
 7. Inline and Input Datepicker
 8. LTR and RTL support
 9. Diffrent design for small screens
+10. No dependancy to other JS library (Vanilla JS)
 
 Installation
 ---------------
 
 ```
 > npm install
-> npm run bower
-> npm run start
+> npm run build
+> npm run serve
 ```
 
 **Usage:**
@@ -36,14 +37,14 @@ Installation
 ```html
 
     <link href="VestaDatePicker.css" type="text/css" rel="stylesheet" />
-    <script src="jquery.min.js"></script>
-    <script src="VestaDatePicker.gregorian.js"></script>
-    <script src="VestaDatePicker.persian.js"></script>
-    <script src="VestaDatePicker.js"></script>
+    <script src="vesta-date-picker.js"></script>
+    <script src="vesta-date-picker.persian.js"></script>
+    <script src="vesta-date-picker.gregorian.js"></script>
+    <script src="vesta-date-picker.hijri.js"></script>
 ```
 
 ```javascript
-    $("#input1").vestadp({
+    var dp1 = new VestaDatePicker(document.getElementById("input1"), {
         dateFormat : "D dd M yy",
         direction: "ltr",
         showFooter: false,
@@ -52,16 +53,17 @@ Installation
         calendar: "gregorian"
     });
 
-    $("#input2").vestadp({
+    var dp2 = new VestaDatePicker(document.getElementById("input2"), {
         dateChanged: function (elm, dateStr) {
             $("#pdate").text(dateStr);  // formated date
         }
     });
     
-    $("#input3").vestadp({                
+    // automatic inline calendar
+    var dp2 = new VestaDatePicker(document.getElementById("div1"), {                
         dateFormat : "DD dd MM yy" ,
         dateChanged: function(elm, dateStr, calendar){
-            var date = elm.vestadp('getDate'); // original javascript date object
+            var date = dp2.getDate(); // original javascript date object
             alert(date);
         }
     });
@@ -80,28 +82,32 @@ Default Options
             today: "امروز",
             clear: "پاکن",
             previous: "قبلی",
-            next: "بعدی"
+            next: "بعدی",
+            previousBtn: "«",
+            nextBtn: "»"
         },
         "en": {
             today: "Today",
             clear: "Clear",
             previous: "Previous",
-            next: "Next"
+            next: "Next",
+            previousBtn: "«",
+            nextBtn: "»"
         },
         "ar": {
             today: "الیوم",
             clear: "واضح",
             previous: "سابق",
-            next: "التالی"
+            next: "التالی",
+            previousBtn: "«",
+            nextBtn: "»"
         }
     },
     language: 'fa',
     calendar: "persian", // [gregorian & persian & hijri] are available.
     dateChanged: function () { },
     minDate: null,
-    maxDate: null,
-    animation: 'fade',
-    showInline: false
+    maxDate: null
 }
 ```
 

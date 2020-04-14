@@ -373,10 +373,8 @@ export class VestaDatePicker {
         this._mainContainer = el("div.ui-vestadp-maincontainer", this._container);
         this._element = element;
         if (this.isTextBox(element)) {
-            this._mainContainer.classList.add('ui-vestadp-popup');
             this.drawInputUI();
         } else {
-            this._mainContainer.classList.add('ui-vestadp-inline');
             this.drawInlineUI();
         }
         setAttr(this._element, { vestadp: true });
@@ -384,6 +382,7 @@ export class VestaDatePicker {
 
     private drawInlineUI() {
         this._isInlinePicker = true;
+        this._mainContainer.classList.add('ui-vestadp-inline');
         setAttr(this._mainContainer, {
             "data-rel": "vestadatepicker-inline"
         });
@@ -392,12 +391,15 @@ export class VestaDatePicker {
     }
 
     private drawInputUI() {
+        this.hide();
         this._isInlinePicker = false;
+        this._mainContainer.classList.add('ui-vestadp-popup');
+        const closeBtn: HTMLElement = el("div.ui-vestadp-close-btn", "✕");
         setAttr(this._mainContainer, {
             style: { position: "absolute" },
             "data-rel": "vestadatepicker"
         });
-        this.hide();
+        mount(this._mainContainer, closeBtn);
         mount(document.body, this._mainContainer);
 
         this._element.addEventListener("focus", (evt) => {
@@ -419,10 +421,10 @@ export class VestaDatePicker {
                 top: offset.top + this._element.offsetHeight + "px",
                 left: left
             });
-            this.show();
+            setTimeout(() => this.show());
         });
-
         const renderFn = () => this.render((this._element as HTMLInputElement).value, false);
+        closeBtn.addEventListener("click", () => this.hide());
         this._element.addEventListener("input", renderFn);
         this._element.addEventListener("propertychange", renderFn);
         this._element.addEventListener("paste", renderFn);
