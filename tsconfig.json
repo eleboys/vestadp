@@ -1,10 +1,16 @@
 {
+    "compileOnSave": false,
     "compilerOptions": {
         "target": "ES5",
-        "module": "ES2015",
-        "allowJs": true,
+        "module": "commonjs",
         "sourceMap": true,
         "noImplicitAny": true,
-        "outDir": "./dist/js"
-    }
+        "outDir": "tmp",
+        "types":[
+            "jasmine"
+        ]
+    },
+    "exclude": [
+        "node_modules"
+    ]
 }

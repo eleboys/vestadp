@@ -1,4 +1,4 @@
-import { el, setStyle, setAttr, mount, setChildren } from "../../node_modules/redom/dist/redom.es";
+import { el, setStyle, setAttr, mount, setChildren } from "redom";
 
 import { VestaDatePickerSettings } from "./vesta-date-picker-settings";
 import { VestaDatePickerDate } from "./vesta-date-picker-date";
