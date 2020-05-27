@@ -1,4 +1,4 @@
-export enum VestaDatePickerFirstDayOfWeek {
+export enum VestaDatePickerDaysOfWeek {
     Sunday = 0,
     Monday = 1,
     Tuesday = 2,

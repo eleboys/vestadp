@@ -1,6 +1,6 @@
 import { VestaDatePickerCalendar } from "./vesta-date-picker-calendar";
 import { VestaDatePickerDate } from "./vesta-date-picker-date";
-import { VestaDatePickerFirstDayOfWeek } from "./vesta-date-picker-fdow.enum";
+import { VestaDatePickerDaysOfWeek } from "./vesta-date-picker-dow.enum";
 
 export class VestaDatePickerGregorianCalendar implements VestaDatePickerCalendar {
 
@@ -12,7 +12,7 @@ export class VestaDatePickerGregorianCalendar implements VestaDatePickerCalendar
     private weekdaysAbbr = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
     private months = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
     private monthsAbbr = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec");
-    private firstDayOfWeek = VestaDatePickerFirstDayOfWeek.Monday;
+    private firstDayOfWeek = VestaDatePickerDaysOfWeek.Monday;
     private defaultDateFormat = "yy-mm-dd";
 
 
@@ -254,11 +254,11 @@ export class VestaDatePickerGregorianCalendar implements VestaDatePickerCalendar
         return this.year == date.year;
     }
 
-    getFirstDayOfWeek(): VestaDatePickerFirstDayOfWeek {
+    getFirstDayOfWeek(): VestaDatePickerDaysOfWeek {
         return this.firstDayOfWeek;
     }
 
-    setFirstDayOfWeek(fdow: VestaDatePickerFirstDayOfWeek): void {
+    setFirstDayOfWeek(fdow: VestaDatePickerDaysOfWeek): void {
         this.firstDayOfWeek = fdow;
     }
 

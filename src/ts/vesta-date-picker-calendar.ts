@@ -1,5 +1,5 @@
 import { VestaDatePickerDate } from "./vesta-date-picker-date";
-import { VestaDatePickerFirstDayOfWeek } from "./vesta-date-picker-fdow.enum";
+import { VestaDatePickerDaysOfWeek } from "./vesta-date-picker-dow.enum";
 
 export interface VestaDatePickerCalendar {
     isLeap(year: number): boolean;
@@ -26,6 +26,6 @@ export interface VestaDatePickerCalendar {
     addYear(n: number): number;
     isSameMonth(jd: number): boolean;
     isSameYear(jd: number): boolean;
-    getFirstDayOfWeek(): VestaDatePickerFirstDayOfWeek;
-    setFirstDayOfWeek(fdow: VestaDatePickerFirstDayOfWeek): void;
+    getFirstDayOfWeek(): VestaDatePickerDaysOfWeek;
+    setFirstDayOfWeek(fdow: VestaDatePickerDaysOfWeek): void;
 }
