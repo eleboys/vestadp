@@ -220,10 +220,11 @@ export class VestaDatePickerPersianCalendar implements VestaDatePickerCalendar {
             return this.getJulianDay();
         if (typeof(month) === "undefined")
             month = 1;
-        var year = this.year, day = this.day;
+        let year = this.year;
+        let day = this.day;
         if (month > 0) {
+            year += Math.floor(month / 12);
             month += this.month;
-            year += Math.floor(month / 13);
             month = month > 12 ? this.mod(month, 12) : month;
         } else {
             month += this.month;
@@ -233,11 +234,9 @@ export class VestaDatePickerPersianCalendar implements VestaDatePickerCalendar {
                 month *= -1;
                 month = 12 - (month > 12 ? this.mod(month, 12) : month);
             }
-            if (month == 0) {
-                year -= 1;
-                month = 12;
-            }
         }
+        
+        month = (month == 0) ? this.month : month;
         day = this.getDaysInMonth(year, month) < day ? this.getDaysInMonth(year, month) : day;
         this.year = year;
         this.month = month;

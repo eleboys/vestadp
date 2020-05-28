@@ -2,7 +2,7 @@ import { VestaDatePickerCalendar } from "./vesta-date-picker-calendar";
 import { VestaDatePickerDate } from "./vesta-date-picker-date";
 import { VestaDatePickerDaysOfWeek } from "./vesta-date-picker-dow.enum";
 
-export class VestaDatePickerPersianCalendar implements VestaDatePickerCalendar {
+export class VestaDatePickerHijriCalendar implements VestaDatePickerCalendar {
 
     private HIJRI_EPOCH = 1948439.5;
     private year: number;
@@ -262,4 +262,4 @@ if (!window["VestaDatePicker"]) {
     throw "VestaDatePicker main library not found";
 }
 
-window["VestaDatePicker"].calendars["hijri"] = new VestaDatePickerPersianCalendar();
+window["VestaDatePicker"].calendars["hijri"] = new VestaDatePickerHijriCalendar();
