@@ -4,10 +4,12 @@ module.exports = function(config) {
         files: [
             "src/ts/vesta-date-picker.ts",
             { pattern: "src/ts/vesta-date-picker-*.ts" },
-            { pattern: "src/test/**/*.ts" }
+            { pattern: "src/test/**/*.ts" },
+            "src/scss/VestaDatePicker.scss"
         ],
         preprocessors: {
-            "**/*.ts": ["karma-typescript"]
+            "src/**/*.ts": ["karma-typescript"],
+            'src/**/*.scss': ['scss']
         },
         client: {
             clearContext: false

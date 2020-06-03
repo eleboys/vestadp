@@ -1,4 +1,4 @@
-import { el, setStyle, setAttr, mount, setChildren } from "redom";
+import { el, setStyle, setAttr, mount, setChildren, unmount } from "redom";
 
 import { VestaDatePickerSettings } from "./vesta-date-picker-settings";
 import { VestaDatePickerDate } from "./vesta-date-picker-date";
@@ -74,7 +74,7 @@ export class VestaDatePicker {
         this.renderDayView();
     }
 
-    public getDate(cultured: true, dateF: string): Date | string {
+    public getDate(cultured: boolean, dateF: string): Date | string {
         if (this._selectedJulianDay === 0){
             return null;
         }
@@ -106,12 +106,20 @@ export class VestaDatePicker {
         this.setCalendarJulianDay(this._selectedJulianDay, raiseChange);
     }
 
+    public setDateChangeListener(onDateChange: (elm: HTMLElement, dateStr: string, dp: VestaDatePickerCalendar) => {}) {
+        this._settings.dateChanged = onDateChange;
+    }
+
     public hide() {
         this._mainContainer.classList.add("ui-vestadp-closed");
     }
 
     public show() {
         this._mainContainer.classList.remove("ui-vestadp-closed");
+    }
+
+    public dispose() {
+        unmount(document.body, this._mainContainer);
     }
 
     private dateToGregorianJd(date: Date | string): number {
@@ -637,7 +645,7 @@ export class VestaDatePicker {
         },
         language: 'en',
         calendar: "gregorian", // [gregorian & persian & hijri] are available.
-        dateChanged: function () { }
+        dateChanged: (elm: HTMLElement, dateStr: string, calendar: VestaDatePickerCalendar) => void(0)
     };
 
     static calendars: any = {};
