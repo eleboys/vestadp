@@ -128,8 +128,8 @@ export class VestaDatePickerGregorianCalendar implements VestaDatePickerCalendar
             d: this.day,
             m: this.month,
             y: this.year,
-            DD: this.weekdays[this.getWeekday()],
-            D: this.weekdaysAbbr[this.getWeekday()],
+            DD: this.getWeekdayList(false)[this.getWeekday()],
+            D: this.getWeekdayList(true)[this.getWeekday()],
             MM: this.months[this.month - 1],
             M: this.monthsAbbr[this.month - 1]
         };
@@ -208,12 +208,13 @@ export class VestaDatePickerGregorianCalendar implements VestaDatePickerCalendar
     addMonth(month: number): number {
         if (month == 0)
             return this.getJulianDay();
-        if (typeof (month) === "undefined")
-            return undefined;
-        var year = this.year, day = this.day;
+        if (typeof(month) === "undefined")
+            month = 1;
+        let year = this.year;
+        let day = this.day;
         if (month > 0) {
+            year += Math.floor(month / 12);
             month += this.month;
-            year += Math.floor(month / 13);
             month = month > 12 ? this.mod(month, 12) : month;
         } else {
             month += this.month;
@@ -223,11 +224,9 @@ export class VestaDatePickerGregorianCalendar implements VestaDatePickerCalendar
                 month *= -1;
                 month = 12 - (month > 12 ? this.mod(month, 12) : month);
             }
-            if (month == 0) {
-                year -= 1;
-                month = 12;
-            }
         }
+        
+        month = (month == 0) ? this.month : month;
         day = this.getDaysInMonth(year, month) < day ? this.getDaysInMonth(year, month) : day;
         this.year = year;
         this.month = month;

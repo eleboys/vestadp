@@ -9,7 +9,7 @@ describe("VestaDatePickerPersianCalender", () => {
     beforeAll(() => {
         today = new VestaDatePickerDate(1399, 3, 9);
         calendar = new VestaDatePickerPersianCalendar();
-    })
+    });
 
     it("should setDate, setDay, setMonth, setYear properly", () => {
         // arrange

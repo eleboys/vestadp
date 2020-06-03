@@ -20,8 +20,23 @@ module.exports = function(config) {
             bundlerOptions: {
                 transforms: [
                     require("karma-typescript-es6-transform")()
-                ]
-            }
+                ],
+                sourceMap: true
+            },
+            compilerOptions: {
+                module: "commonjs",
+                sourceMap: true,
+                target: "ES5"
+            },
+            coverageOptions: {
+                instrumentation: true,
+                instrumenterOptions: {
+                    preserveComments: true,
+                    debug: true,
+                    produceSourceMap: true
+                }
+            },
+            exclude: ["node_modules"]
         }
     });
 };
