@@ -1,5 +1,4 @@
-About VestaDatePicker?
-------------------------
+# VestaDatePicker
 
 VestaDatePicker is a multi-culture javascript date picker in form of a plain javascript class (vanilla) that can be feed with your own custom calendar algorithms, as it is already included with some of the most known calendars such as "Gregorian", "Persian" and "Hijri".
 
@@ -10,9 +9,9 @@ What makes this datepicker so different from other libraries is that you can hav
 you can see the [demo from here](https://vestadp-fe09a.web.app/)
 
 
-Features
---------
-1. Multiculture calendars
+## Features
+
+1. Multi-culture calendars
 2. Themable and Sass support
 3. Gregorian and Persian and Hijri is available
 4. Can support every custom calendar you need (calendar interface must be implemented)
@@ -22,9 +21,10 @@ Features
 8. LTR and RTL support
 9. Different design for small screens
 10. No dependency to other JS library (Vanilla JS)
+11. Light weight (~15k gzipped)
+12. Hot switch between calenders using API
 
-Installation
----------------
+## Installation
 
 ```
 > npm install
@@ -55,7 +55,7 @@ Installation
 
     var dp2 = new VestaDatePicker(document.getElementById("input2"), {
         dateChanged: function (elm, dateStr) {
-            $("#pdate").text(dateStr);  // formated date
+            $("#pdate").text(dateStr);  // formatted date
         }
     });
     
@@ -69,12 +69,12 @@ Installation
     });
 ```
 
-Default Options
--------------
+## Default Options
+
 ```javascript
 {
     direction: "rtl",
-    dateFormat: "", // default dateFromat of each calendar
+    dateFormat: "", // default dateFormat of each calendar
     showFooter: true,
     persianNumbers: true,
     regional: {
@@ -104,7 +104,7 @@ Default Options
         }
     },
     language: 'fa',
-    calendar: "persian", // [gregorian & persian & hijri] are available.
+    calendar: null, // eg: VestaDatePicker.calendars.persian|hijri|gregorian
     dateChanged: function () { },
     minDate: null,
     maxDate: null
