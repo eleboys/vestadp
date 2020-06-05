@@ -1,9 +1,9 @@
 About VestaDatePicker?
 ------------------------
 
-VestaDatePicker is a multi-culture javascript date picker in form of JQuery plugin that can be feed with your own custom calendar algorithms, as it is already included with some of the most known calendars such as "Gregorian", "Persian" and "Hijri".
+VestaDatePicker is a multi-culture javascript date picker in form of a plain javascript class (vanilla) that can be feed with your own custom calendar algorithms, as it is already included with some of the most known calendars such as "Gregorian", "Persian" and "Hijri".
 
-What makes this datepicker so different from other libraries is that you can have all cultures and all different datepicker allgoritm at the same time in a page or hot switch the culture of an input without any js referesh/cleanup or page postback. this is mostly usefull when you are using modern SPA frameworks and you may change the app culture/language just from client side.
+What makes this datepicker so different from other libraries is that you can have all cultures and all different datepicker algorithm at the same time in a page or hot switch the culture of an input without any js refresh/cleanup or page postback. this is mostly useful when you are using modern SPA frameworks and you may change the app culture/language just from client side.
 
 ![alt text](http://uupload.ir/files/o7p3_datepicker.jpg)
 
@@ -12,16 +12,16 @@ you can see the [demo from here](https://vestadp-fe09a.web.app/)
 
 Features
 --------
-1. Multiculture callendars
+1. Multiculture calendars
 2. Themable and Sass support
 3. Gregorian and Persian and Hijri is available
-4. Can support every custom callendar you need (callendar interface must be implemented)
-5. No need to change js file for different callendars
-6. Multiple calendar algoritms can be used in a page at same time
+4. Can support every custom calendar you need (calendar interface must be implemented)
+5. No need to change js file for different calendars
+6. Multiple calendar algorithms can be used in a page at same time
 7. Inline and Input Datepicker
 8. LTR and RTL support
-9. Diffrent design for small screens
-10. No dependancy to other JS library (Vanilla JS)
+9. Different design for small screens
+10. No dependency to other JS library (Vanilla JS)
 
 Installation
 ---------------
