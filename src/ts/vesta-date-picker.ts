@@ -15,13 +15,17 @@ export class VestaDatePicker {
     private _startYear: number;
     private _endYear: number;
     private _dateParser: VestaDatePickerDateParser;
-    private _minDateJd: number;
-    private _maxDateJd: number;
     private _element: HTMLElement;
     private _container: HTMLElement;
     private _mainContainer: HTMLElement;
     private _clickHandlers: any;
     private _calendar: VestaDatePickerCalendar;
+    private get _minDateJd(): number {
+        return  this.dateToGregorianJd(this._settings.minDate);
+    }
+    private get _maxDateJd(): number {
+        return this.dateToGregorianJd(this._settings.maxDate);
+    }
 
     constructor(element: HTMLElement, options?: VestaDatePickerSettings) {
         this._settings = this.deepExtend({}, [VestaDatePicker.defaultSettings, options]);
@@ -32,8 +36,6 @@ export class VestaDatePicker {
         this._dateFormat = this._settings.dateFormat || this._calendar.getDefaultDateFormat();
         this._selectedJulianDay = 0;
         this._currentView = 0; // 0 = dayView; 1 = month view; 2 = year view
-        this._minDateJd = this.dateToGregorianJd(this._settings.minDate);
-        this._maxDateJd = this.dateToGregorianJd(this._settings.maxDate);
         this._dateParser = new VestaDatePickerDateParser(this._calendar);
         this.buildClickHandlers();
         this.drawUI(element);
@@ -185,7 +187,7 @@ export class VestaDatePicker {
     }
 
     private setCalendarJulianDay(jd: number, raiseChange: boolean): void {
-        if (jd < this._minDateJd) {
+        if (jd < this._minDateJd && jd !== 0) {
             jd = this._minDateJd;
         } else if (this._maxDateJd && jd > this._maxDateJd){
             jd = this._maxDateJd;
@@ -382,6 +384,7 @@ export class VestaDatePicker {
         this._element = element;
         if (this.isTextBox(element)) {
             this.drawInputUI();
+            this.render((this._element as HTMLInputElement).value, false); // to check and fix probable min/max date initial value issues
         } else {
             this.drawInlineUI();
         }
@@ -592,10 +595,11 @@ export class VestaDatePicker {
       
           for (var key in obj) {
             if (obj.hasOwnProperty(key)) {
-              if (typeof obj[key] === "undefined" || obj[key] === null) {
+              const val = obj[key];
+              if (typeof val === "undefined" || obj[key] === null) {
                 out[key] = obj[key];
               }
-              else if (typeof obj[key] === 'object'){
+              else if (typeof val === 'object' && !(val instanceof Date)){
                 if(obj[key] instanceof Array == true)
                   out[key] = obj[key].slice(0);
                 else

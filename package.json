@@ -1,10 +1,10 @@
 {
   "name": "vestadatepicker",
   "version": "1.2.0",
-  "description": "VestaDatePicker is a multi culture datepicker that can be feed with your own custom calendar algoritms, as it is included",
+  "description": "VestaDatePicker is a multi culture datepicker that can be feed with your own custom calendar algorithms, as it is included",
   "main": "src/js/VestaDatePicker.js",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack --env.production",
     "dev": "webpack --watch",
     "serve": "http-server ./",
     "test": "karma start"
