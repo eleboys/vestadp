@@ -32,12 +32,28 @@
     <p id="pdate">&nbsp;</p>
     <p>&nbsp;</p>
     <p>Inline Sample (Persian)</p>
+    <div>
+        view:
+        <select onchange="onViewChanged()" id="optViewMode">
+            <option value="day">Day</option>
+            <option value="month">Month</option>
+            <option value="year">Year</option>
+        </select>
+    </div>
+    <div>
+        calendar:
+        <select onchange="onCalendarChanged()" id="optCalendar">
+            <option value="persian">Persian</option>
+            <option value="gregorian">Gregorian</option>
+            <option value="hijri">Hijri</option>
+        </select>
+    </div>
     <p id="medate" style="text-align: center">&nbsp;</p>
     <p>&nbsp;</p>
     <script>
         var dp1 = new VestaDatePicker(document.getElementById("testdp"), {
             persianNumbers: true,
-            calendar: "hijri",
+            calendar: VestaDatePicker.calendars.hijri,
             language: "ar",
             direction: "rtl",
             dateChanged: function (elm, dateStr) {
@@ -45,17 +61,30 @@
                 alert(date);
             }
         });
-        new VestaDatePicker(document.getElementById("dpEn"));
-        new VestaDatePicker(document.getElementById("medate"), {
+        var dp2 = new VestaDatePicker(document.getElementById("dpEn"), {
+            calendar: VestaDatePicker.calendars.gregorian
+        });
+        var dp3 = new VestaDatePicker(document.getElementById("medate"), {
             persianNumbers: true,
             dateFormat: "DD dd MM yy",
-            calendar: "persian",
+            calendar: VestaDatePicker.calendars.persian,
             direction: "rtl",
             language: "fa",
             dateChanged: function(elm, dateStr, calendar){
                 document.getElementById("pdate").innerText = dateStr;
             }
         });
+
+        function onViewChanged() {
+            var mode = document.getElementById("optViewMode").value;
+            dp3.setCurrentView(mode);
+        }
+
+        function onCalendarChanged() {
+            var calendar = document.getElementById("optCalendar").value;
+            dp3.getOptions().persianNumbers = false;
+            dp3.setCalendar(VestaDatePicker.calendars[calendar]);
+        }
     </script>
 </body>
 </html>

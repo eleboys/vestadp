@@ -5,7 +5,7 @@
   "main": "src/js/VestaDatePicker.js",
   "scripts": {
     "build": "webpack --env.production",
-    "dev": "webpack --watch",
+    "dev": "webpack --watch --env.production=false",
     "serve": "http-server ./",
     "test": "karma start"
   },

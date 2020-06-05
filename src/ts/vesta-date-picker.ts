@@ -4,6 +4,7 @@ import { VestaDatePickerSettings } from "./vesta-date-picker-settings";
 import { VestaDatePickerDate } from "./vesta-date-picker-date";
 import { VestaDatePickerDateParser } from "./vesta-date-picker-date-parser";
 import { VestaDatePickerCalendar } from "./vesta-date-picker-calendar";
+import { VestaDatePickerViewMode } from "./vesta-date-picker-view-mode.enum";
 
 export class VestaDatePicker {
 
@@ -11,7 +12,7 @@ export class VestaDatePicker {
     private _dateFormat: string;
     private _isInlinePicker: boolean;
     private _selectedJulianDay: number;
-    private _currentView: number;
+    private _currentView: VestaDatePickerViewMode;
     private _startYear: number;
     private _endYear: number;
     private _dateParser: VestaDatePickerDateParser;
@@ -19,23 +20,24 @@ export class VestaDatePicker {
     private _container: HTMLElement;
     private _mainContainer: HTMLElement;
     private _clickHandlers: any;
-    private _calendar: VestaDatePickerCalendar;
     private get _minDateJd(): number {
         return  this.dateToGregorianJd(this._settings.minDate);
     }
     private get _maxDateJd(): number {
         return this.dateToGregorianJd(this._settings.maxDate);
     }
+    private get _calendar(): VestaDatePickerCalendar {
+        return this._settings.calendar;
+    }
 
     constructor(element: HTMLElement, options?: VestaDatePickerSettings) {
-        this._settings = this.deepExtend({}, [VestaDatePicker.defaultSettings, options]);
-        this._calendar = VestaDatePicker.calendars[this._settings.calendar];
-        if (!this._calendar) {
-            throw "calendar '" + this._settings.calendar + "' not loaded!";
+        this._settings = Object.assign({}, VestaDatePicker.defaultSettings, options);
+        if (!this._settings.calendar) {
+            throw "Options.calendar needs to be defined!";
         }
         this._dateFormat = this._settings.dateFormat || this._calendar.getDefaultDateFormat();
         this._selectedJulianDay = 0;
-        this._currentView = 0; // 0 = dayView; 1 = month view; 2 = year view
+        this._currentView = VestaDatePickerViewMode.Day; // 0 = dayView; 1 = month view; 2 = year view
         this._dateParser = new VestaDatePickerDateParser(this._calendar);
         this.buildClickHandlers();
         this.drawUI(element);
@@ -45,6 +47,36 @@ export class VestaDatePicker {
     public getCalendar(): VestaDatePickerCalendar {
         return this._calendar;
     };
+
+    public setCalendar(calendar: VestaDatePickerCalendar): void {
+        calendar.setJulianDay(this._calendar.getJulianDay());
+        this._settings.calendar = calendar;
+        this.setCurrentView(this._currentView);
+        const dateStr = this._calendar.toString(this._dateFormat);
+        if (typeof (this._element) !== "undefined" && !this._isInlinePicker) {
+            setAttr(this._element, { value: dateStr});
+        }
+    }
+
+    public getCurrentView(): VestaDatePickerViewMode {
+        return this._currentView;
+    }
+
+    public setCurrentView(mode: VestaDatePickerViewMode): void {
+        switch (mode) {
+            case VestaDatePickerViewMode.Day:
+                this.renderDayView();
+                break;
+            case VestaDatePickerViewMode.Month:
+                this.renderMonthView();
+                break;
+            case VestaDatePickerViewMode.Year:
+                this.renderYearView(this._calendar.getYear());
+                break;
+            default:
+                throw `Value '${mode}' is not a valid ViewMode!`;
+        }
+    }
 
     public getOptions(): VestaDatePickerSettings {
         return this._settings;
@@ -206,7 +238,7 @@ export class VestaDatePicker {
     }
 
     private renderDayView() {
-        this._currentView = 0;
+        this._currentView = VestaDatePickerViewMode.Day;
         const cal = this._calendar;
         const months = cal.getMonthList(false);
         const headerTitle = months[cal.getMonth() - 1] + " " + this.getNumber(cal.getYear());
@@ -269,7 +301,7 @@ export class VestaDatePicker {
         const header = this.drawHeader(headerTitle, "view:year")
         let months = this._calendar.getMonthList(true);
         let mIndex = 0;
-        this._currentView = 1;
+        this._currentView = VestaDatePickerViewMode.Month;
         setChildren(this._container, [header]);
         const calTable = el("div.ui-vestadp-calendar", {
             style: { direction: opts.direction, display: 'none' }
@@ -297,7 +329,7 @@ export class VestaDatePicker {
     }
 
     private renderYearView(year: number) {
-        this._currentView = 2;
+        this._currentView = VestaDatePickerViewMode.Year;
         const calTable = el("div.ui-vestadp-calendar", {
             cellspacing: 1,
             style: { direction: "ltr", display: 'none' }
@@ -511,24 +543,23 @@ export class VestaDatePicker {
     }
 
     private buildClickHandlers() {
-        const calendar = this._calendar;
-        this._clickHandlers = [
-            {
-                "next": () => {  calendar.addMonth(1); return true;   },
-                "prev": () => {  calendar.addMonth(-1); return true;   },
+        this._clickHandlers = {
+            day: {
+                "next": () => {  this._calendar.addMonth(1); return true;   },
+                "prev": () => {  this._calendar.addMonth(-1); return true;   },
                 "view": () => {  this.renderMonthView(); return false; },
                 "date": (args: any, elem: HTMLElement) => {
-                    calendar.setMonth(parseInt(args["month"]));
-                    calendar.setDay(parseInt(args["day"]));
-                    this._selectedJulianDay = calendar.getJulianDay();
-                    const dateStr = calendar.toString(this._dateFormat);
-                    this._settings.dateChanged(this._element, dateStr, calendar);
+                    this._calendar.setMonth(parseInt(args["month"]));
+                    this._calendar.setDay(parseInt(args["day"]));
+                    this._selectedJulianDay = this._calendar.getJulianDay();
+                    const dateStr = this._calendar.toString(this._dateFormat);
+                    this._settings.dateChanged(this._element, dateStr, this._calendar);
                     if (typeof (this._element) !== "undefined" && !this._isInlinePicker) {
                         setAttr(this._element, { value: dateStr});
                         this.hide();
                     } else if (typeof (this._element) !== "undefined" && this._isInlinePicker) {
                         this._container.querySelectorAll(".ui-vestadp-selected")
-                                    .forEach(i => i.classList.remove("ui-vestadp-selected"));
+                                       .forEach(i => i.classList.remove("ui-vestadp-selected"));
                         elem.classList.add("ui-vestadp-selected");
                     }     
 
@@ -540,16 +571,16 @@ export class VestaDatePicker {
                     this.renderDayView();
                 }
             },
-            {
-                "next": function () { calendar.addYear(1); return true; },
-                "prev": function () { calendar.addYear(-1); return true; },
+            month: {
+                "next": function () { this._calendar.addYear(1); return true; },
+                "prev": function () { this._calendar.addYear(-1); return true; },
                 "view": (args: any, elem: HTMLElement) => { 
                     if (args["view"] == "cal") {
-                        calendar.setMonth(parseInt(args["month"]));
+                        this._calendar.setMonth(parseInt(args["month"]));
                         this.renderDayView();
                         return;
                     } else if (args["view"] == "year")
-                        this.renderYearView(calendar.getYear());
+                        this.renderYearView(this._calendar.getYear());
                     return false;             
                  },
                  "after": (args: any, elem: HTMLElement) => {
@@ -558,7 +589,7 @@ export class VestaDatePicker {
                     this.renderMonthView();
                  }
             }, 
-            {
+            year: {
                 "next": () => {
                     const calTable = this._container.querySelector(".ui-vestadp-calendar");
                     calTable.classList.add("ui-vestadp-calendar-inactive");
@@ -572,7 +603,7 @@ export class VestaDatePicker {
                 "view": (args: any) => {
                     if (!args) return;
                     if (args["view"] == "month") {
-                        calendar.setYear(parseInt(args["year"]));
+                        this._calendar.setYear(parseInt(args["year"]));
                         const calTable = this._container.querySelector(".ui-vestadp-calendar");
                         calTable.classList.add("ui-vestadp-calendar-inactive");
                         this.renderMonthView();
@@ -581,7 +612,7 @@ export class VestaDatePicker {
                 },
                 "after": () => {  }
             }
-        ];
+        };
     }
 
     private deepExtend(out: any, sources: any[]) {
@@ -648,7 +679,7 @@ export class VestaDatePicker {
             }
         },
         language: 'en',
-        calendar: "gregorian", // [gregorian & persian & hijri] are available.
+        calendar: null, // needs to be fed initially. [gregorian & persian & hijri] are available.
         dateChanged: (elm: HTMLElement, dateStr: string, calendar: VestaDatePickerCalendar) => void(0)
     };
 

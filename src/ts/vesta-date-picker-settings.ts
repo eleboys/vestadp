@@ -7,7 +7,7 @@ export interface VestaDatePickerSettings {
     persianNumbers: boolean;
     regional: any;
     language: string;
-    calendar: "persian" | "gregorian" | "hijri";
+    calendar: VestaDatePickerCalendar,
     dateChanged: (elm: HTMLElement, dateStr: string, calendar: VestaDatePickerCalendar) => { };
     minDate: Date;
     maxDate: Date;

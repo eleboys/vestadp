@@ -1,4 +1,6 @@
 import { VestaDatePicker } from "../ts/vesta-date-picker";
+import { VestaDatePickerGregorianCalendar } from "../ts/vesta-date-picker-gregorian-calendar";
+import { VestaDatePickerViewMode } from "../ts/vesta-date-picker-view-mode.enum";
 
 describe("VestaDatePicker (Input Mode)", () => {
     let input: HTMLInputElement;
@@ -8,7 +10,10 @@ describe("VestaDatePicker (Input Mode)", () => {
         input = document.createElement("input");
         input.setAttribute("type", "text");
         document.body.appendChild(input);
-        datepicker = new VestaDatePicker(input);
+        datepicker = new VestaDatePicker(input, {
+            ...VestaDatePicker.defaultSettings,
+            calendar: new VestaDatePickerGregorianCalendar()
+        });
     });
 
     it("should create datepicker", () => {
@@ -57,6 +62,7 @@ describe("VestaDatePicker (Input Mode)", () => {
         datepicker.show();
         const elements = document.getElementsByClassName("ui-vestadp-closed");
         expect(elements.length).toEqual(0);
+        expect(datepicker.getCurrentView()).toEqual(VestaDatePickerViewMode.Day);
     });
 
     it("should hide when somewhere outside is clicked", () => {
@@ -81,6 +87,7 @@ describe("VestaDatePicker (Input Mode)", () => {
         const monthList  = document.querySelectorAll(".ui-vestadp-monthlist");
         expect(monthList).toBeTruthy();
         expect(monthList.length).toEqual(3);
+        expect(datepicker.getCurrentView()).toEqual(VestaDatePickerViewMode.Month);
     });
 
     it("should go to year view if year name is clicked", () => {
@@ -91,6 +98,7 @@ describe("VestaDatePicker (Input Mode)", () => {
         const yearList  = document.querySelectorAll(".ui-vestadp-yearlist");
         expect(yearList).toBeTruthy();
         expect(yearList.length).toEqual(3);
+        expect(datepicker.getCurrentView()).toEqual(VestaDatePickerViewMode.Year);
     });
 
     [

@@ -1,5 +1,5 @@
 module.exports = (env) => {
-  let envString = env.production ? "production" : "development";
+  let envString = env.production == true ? "production" : "development";
   return {
     mode: envString,
     entry: {

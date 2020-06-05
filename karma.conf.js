@@ -28,7 +28,7 @@ module.exports = function(config) {
             compilerOptions: {
                 module: "commonjs",
                 sourceMap: true,
-                target: "ES5"
+                target: "ES6"
             },
             coverageOptions: {
                 instrumentation: true,
