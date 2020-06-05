@@ -1,4 +1,5 @@
 import { VestaDatePickerCalendar } from "./vesta-date-picker-calendar";
+import { VestaDatePickerViewMode } from "./vesta-date-picker-view-mode.enum";
 
 export interface VestaDatePickerSettings {
     direction: "rtl" | "ltr";
@@ -9,6 +10,7 @@ export interface VestaDatePickerSettings {
     language: string;
     calendar: VestaDatePickerCalendar,
     dateChanged: (elm: HTMLElement, dateStr: string, calendar: VestaDatePickerCalendar) => { };
+    viewChanged: (view: VestaDatePickerViewMode) => { };
     minDate: Date;
     maxDate: Date;
 }

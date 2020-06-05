@@ -239,6 +239,7 @@ export class VestaDatePicker {
 
     private renderDayView() {
         this._currentView = VestaDatePickerViewMode.Day;
+        this._settings.viewChanged(this._currentView);
         const cal = this._calendar;
         const months = cal.getMonthList(false);
         const headerTitle = months[cal.getMonth() - 1] + " " + this.getNumber(cal.getYear());
@@ -302,6 +303,7 @@ export class VestaDatePicker {
         let months = this._calendar.getMonthList(true);
         let mIndex = 0;
         this._currentView = VestaDatePickerViewMode.Month;
+        this._settings.viewChanged(this._currentView);
         setChildren(this._container, [header]);
         const calTable = el("div.ui-vestadp-calendar", {
             style: { direction: opts.direction, display: 'none' }
@@ -330,6 +332,7 @@ export class VestaDatePicker {
 
     private renderYearView(year: number) {
         this._currentView = VestaDatePickerViewMode.Year;
+        this._settings.viewChanged(this._currentView);
         const calTable = el("div.ui-vestadp-calendar", {
             cellspacing: 1,
             style: { direction: "ltr", display: 'none' }
@@ -680,7 +683,8 @@ export class VestaDatePicker {
         },
         language: 'en',
         calendar: null, // needs to be fed initially. [gregorian & persian & hijri] are available.
-        dateChanged: (elm: HTMLElement, dateStr: string, calendar: VestaDatePickerCalendar) => void(0)
+        dateChanged: (elm: HTMLElement, dateStr: string, calendar: VestaDatePickerCalendar) => void(0),
+        viewChanged: (view: VestaDatePickerViewMode) => void(0)
     };
 
     static calendars: any = {};

@@ -72,6 +72,9 @@
             language: "fa",
             dateChanged: function(elm, dateStr, calendar){
                 document.getElementById("pdate").innerText = dateStr;
+            },
+            viewChanged: function(view) {
+                document.getElementById("optViewMode").value = view;
             }
         });
 

@@ -105,7 +105,8 @@ you can see the [demo from here](https://vestadp-fe09a.web.app/)
     },
     language: 'fa',
     calendar: null, // eg: VestaDatePicker.calendars.persian|hijri|gregorian
-    dateChanged: function () { },
+    dateChanged: (elm: HTMLElement, dateStr: string, calendar: VestaDatePickerCalendar) => void(0),
+    viewChanged: (view: VestaDatePickerViewMode) => void(0)
     minDate: null,
     maxDate: null
 }

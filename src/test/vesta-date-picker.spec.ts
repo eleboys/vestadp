@@ -73,25 +73,29 @@ describe("VestaDatePicker (Input Mode)", () => {
     });
 
     it("should select a date if a day is clicked", () => {
+        jasmine.clock().install();
         input.dispatchEvent(new Event("focus"));
-        const modeChangerBtn = document.querySelector<HTMLButtonElement>(".ui-vestadp-title");
-        modeChangerBtn.click();
-        const monthLists  = document.querySelectorAll(".ui-vestadp-monthlist");
-        expect(monthLists).toBeTruthy();
-        expect(monthLists.length).toEqual(3);
+        jasmine.clock().tick(20);
+        datepicker.setDate({ year: 2020, month: 6, day: 3}, false, false);
+        document.querySelector<HTMLButtonElement>(".ui-vestadp-day").click();
+        jasmine.clock().uninstall();
+        expect(input.value).toEqual("2020-06-01");
     });
 
     it("should go to month view if month name is clicked", () => {
         input.dispatchEvent(new Event("focus"));
+        spyOn(datepicker.getOptions(), "viewChanged");
         document.querySelector<HTMLButtonElement>(".ui-vestadp-title").click();
         const monthList  = document.querySelectorAll(".ui-vestadp-monthlist");
         expect(monthList).toBeTruthy();
         expect(monthList.length).toEqual(3);
         expect(datepicker.getCurrentView()).toEqual(VestaDatePickerViewMode.Month);
+        expect(datepicker.getOptions().viewChanged).toHaveBeenCalledWith(VestaDatePickerViewMode.Month);
     });
 
     it("should go to year view if year name is clicked", () => {
         datepicker.setDate({ year: 2020, month: 6, day: 3}, false, false);
+        spyOn(datepicker.getOptions(), "viewChanged");
         input.dispatchEvent(new Event("focus"));
         document.querySelector<HTMLButtonElement>(".ui-vestadp-title").click(); // month view
         document.querySelector<HTMLButtonElement>(".ui-vestadp-title").click(); // year view
@@ -99,6 +103,7 @@ describe("VestaDatePicker (Input Mode)", () => {
         expect(yearList).toBeTruthy();
         expect(yearList.length).toEqual(3);
         expect(datepicker.getCurrentView()).toEqual(VestaDatePickerViewMode.Year);
+        expect(datepicker.getOptions().viewChanged).toHaveBeenCalledWith(VestaDatePickerViewMode.Year);
     });
 
     [
