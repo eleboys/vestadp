@@ -1,4 +1,5 @@
-import { el, setStyle, setAttr, mount, setChildren, unmount } from "redom";
+import { el, setAttr, mount, setChildren, unmount } from "redom";
+import { createPopper } from "@popperjs/core";
 
 import { VestaDatePickerSettings } from "./vesta-date-picker-settings";
 import { VestaDatePickerDate } from "./vesta-date-picker-date";
@@ -442,8 +443,7 @@ export class VestaDatePicker {
         this._mainContainer.classList.add('ui-vestadp-popup');
         const closeBtn: HTMLElement = el("div.ui-vestadp-close-btn", "✕");
         setAttr(this._mainContainer, {
-            style: { position: "absolute" },
-            "data-rel": "vestadatepicker"
+          "data-rel": "vestadatepicker"
         });
         mount(this._mainContainer, closeBtn);
         mount(document.body, this._mainContainer);
@@ -452,22 +452,12 @@ export class VestaDatePicker {
             this.render((this._element as HTMLInputElement).value, false);
             document.querySelectorAll("div[data-rel='vestadatepicker']")
                     .forEach(d => d.classList.add("ui-vestadp-closed"));
-            let left, top;
-            const rect = this._element.getBoundingClientRect();
-            const offset = {
-                top: rect.top + document.body.scrollTop,
-                left: rect.left + document.body.scrollLeft
-            };            
-            if (this._settings.direction=="rtl")
-                left = offset.left + (this._mainContainer.offsetWidth - this._element.offsetWidth) +"px"
-            else
-                left = offset.left + "px";
-            setStyle(this._mainContainer, {
-                position: "absolute",
-                top: offset.top + this._element.offsetHeight + "px",
-                left: left
+            setTimeout(() => {
+              createPopper(this._element, this._mainContainer, {
+                placement: this._settings.direction === "ltr" ? "bottom-start" : "bottom-end"
+              });
+              this.show();
             });
-            setTimeout(() => this.show());
         });
         const renderFn = () => this.render((this._element as HTMLInputElement).value, false);
         closeBtn.addEventListener("click", () => this.hide());

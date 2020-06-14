@@ -42,7 +42,9 @@ $font_size: 10pt;
 		@media (min-width:0) and (max-width: $screen-xs) {
 			position: fixed !important;
 			top: 0 !important;
-			left: 0 !important;
+      left: 0 !important;
+      transform: none !important;
+      inset: 0px !important;
 			width: 100%;
 			bottom: 0;
 			background-color: rgba(0,0,0,0.7);

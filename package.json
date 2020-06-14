@@ -57,6 +57,7 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
+    "@popperjs/core": "^2.4.2",
     "redom": "^3.26.0"
   }
 }
