@@ -47,7 +47,7 @@
     "karma-scss-preprocessor": "^4.0.0",
     "karma-typescript": "^5.0.3",
     "karma-typescript-es6-transform": "^5.0.3",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "sass-loader": "^8.0.2",
     "source-map-loader": "^0.2.4",
     "style-loader": "^1.1.3",
